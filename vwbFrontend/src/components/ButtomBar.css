@@ -1,0 +1,64 @@
+.ButtomBar {
+    background: #333;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.ButtomBar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.ButtomBar-logo {
+    color: #fff;
+    justify-self: start;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin-left: 20px;
+}
+
+.ButtomBar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.ButtomBar-item {
+    height: 60px;
+}
+
+.ButtomBar-links {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ButtomBar-links:hover {
+    background-color: #555;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.ButtomBar-links.active {
+    background-color: #555;
+}
+
+.custom-class {
+    background-color: red;
+}

@@ -15,15 +15,5 @@ export class APIController {
     const user = await this.userService.getUser({ uid });
     return { success: true, message: 'OK', data: user };
   }
-  @Get('/LoginUser')
-  async LoginUser(@Query('name') name, @Query('password') password) {
-    const user = await this.userService.Login({name, password});
-    return {sucess: true, message: 'OK', data: user};
-  }
-  @Get('/user_name')
-  async getUserByName(@Query('name') name) {
-    console.log('name:', name);
-    const user = await this.userService.getUserByName(name);
-    return {success: true, message: 'OK', data: user};
-  }
+
 }

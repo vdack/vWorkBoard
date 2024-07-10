@@ -1,0 +1,28 @@
+.AboutPage-container {
+    text-align: left;
+    font-size: 160%;
+    min-width: 1200px;
+}
+.AboutPage-body {
+    padding-left: 5%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.AboutPage-header {
+    font-size: 160%;
+}
+.AboutPage-subHeader {
+    font-size: 120%;
+    padding-left: 2%;
+    display: inline;
+    
+}
+.AboutPage-contact {
+    padding: auto;
+    font-family: 'Courier New', Courier, monospace;
+    display: inline;
+
+}
+
+.AboutPage-contact:hover{
+    text-decoration: underline;
+}

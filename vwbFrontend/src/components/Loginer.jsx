@@ -1,55 +1,26 @@
-
 import reactLogo from "../assets/react.svg";
 import "./Loginer.css";
 import { useState } from "react";
-import { getUserByName } from "../api/userApi";
-
+import { getUserByName, login} from "../api/userApi";
+import { AccPswdInputer } from "./NewInput";
 export function Loginer () {
-
-    const [account, setAccount] = useState('');
-    const [password, setPassword] = useState('');
-    const [ifHiddenPassword, setIHP] = useState(true);
-
-    const changeAccount = (event) => {
-        setAccount(event.target.value);
+    const submitName = 'Login';
+    const onSubmit = async (account, password) => {
+        const res = await login({name: account, password: password});
+        console.log(JSON.stringify(res.data));
+        if (res.data.status == 400) {
+            console.log('Account not exist.');
+        } else if (res.data.status == 401) {
+            console.log('Password incorrect');
+        } else if (res.data.status == 200 && res.data.password) {
+            console.log('login sucessful');
+        } else {
+            console.log('Unkown Error!');
+        }
     }
-    const changePassword = (event) => {
-        setPassword(event.target.value);
-    }
-    const loginin = async () => {
-        console.log('account', account);
-        console.log('password', password);
-        const user = await getUserByName(account);
-        console.Console(JSON.stringify(user));
-        setAccount('');
-        setPassword('');
-    }
-
     return (
         <div className="Loginer-container">
-            <div className="Loginer-logoContainer">
-                <img src={reactLogo} className="Loginer-logo"/>
-            </div>
-            <h1>LOGIN HERE</h1>
-            <div className="Loginer-accountInput">
-                <h3>Account: </h3>
-                <input 
-                    type="text"
-                    value={account}
-                    onChange={changeAccount}
-                />
-            </div>
-
-            <div className="Loginer-passwordInput">
-                <h3>Password: </h3>
-                <input 
-                    type="password"
-                    value={password}
-                    onChange={changePassword}
-                />
-            </div>
-
-            <button className="Loginer-loginButton" onClick={loginin}>Login</button>
+            <AccPswdInputer submitName={submitName} onSubmit={onSubmit} /> 
         </div>
     );
 }

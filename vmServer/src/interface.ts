@@ -11,6 +11,7 @@ export interface ILoginUser {
 }
 
 export interface IUser {
-  id: string;
+  id: number;
   name: string;
+  password: string;
 }
