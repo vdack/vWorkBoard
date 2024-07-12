@@ -27,6 +27,10 @@ export default {
     },
 
   },
+  jwt: {
+    secret: 'vdack-common-test',
+    expiresIn: 60*60,
+  },
 } as MidwayConfig;
 
 

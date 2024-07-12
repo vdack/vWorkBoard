@@ -1,5 +1,5 @@
 import { IUser } from './../interface';
-import { httpError, Provide } from '@midwayjs/core';
+import { Provide } from '@midwayjs/core';
 import { IUserOptions, ILoginUser } from '../interface';
 import { User } from '../entity/user';
 import { InjectEntityModel } from '@midwayjs/typeorm';
@@ -27,16 +27,14 @@ export class UserService {
       }
     });
     if (findres) {
-      return new httpError.BadRequestError('USER EXISTED');
+      return {};
     }
     const id = await this.userModel.count() + 123;
-    console.log('id:', id);
     const newUser: IUser = {id, name: para.name, password: para.password};
     const res = await this.userModel.save(newUser);
     console.log('login result:', res);
     return ({
-      status: 200,
-      sucess: true,
+      id: id,
       name: para.name,
     });
   }
@@ -51,17 +49,17 @@ export class UserService {
 
     if (!findres) {
       console.log('user not exist');
-      return new httpError.BadRequestError('USER NOT EXIST');
+      return {status: 400};
     }
     if (findres.password !== para.password) {
       console.log('password incorrect');
-      return new httpError.UnauthorizedError('PASSWORD INCORRECT');
+      return {status: 401};
     }
     return {
       status: 200,
       id: findres.id,
-      found: true,
-      password: true
+      name: para.name,
+      password: findres.password
     };
   }
 

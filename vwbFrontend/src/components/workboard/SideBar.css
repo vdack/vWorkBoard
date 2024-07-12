@@ -1,0 +1,47 @@
+.SideBar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background-color: var(--c--backgroud);
+  color: white;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.SideBar-container h2 {
+  margin-top: 2cm;
+}
+
+.SideBar-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.SideBar-container ul li {
+  margin: 10px 0;
+}
+
+.SideBar-container ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.SideBar-container ul li a:hover {
+  text-decoration: underline;
+}
+
+.SideBar-listHeader {
+  font-size: 20px;
+  position: fixed;
+  left: 0;
+}
+
+.SideBar-extension {
+  padding-bottom: 20%;
+  text-align:left;
+
+  width: 200px;
+  height: 8px;
+}

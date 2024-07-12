@@ -62,3 +62,7 @@
 .custom-class {
     background-color: red;
 }
+
+.ButtomBar-currentLinks {
+    text-decoration: underline;
+}

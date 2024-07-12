@@ -15,11 +15,10 @@ export function Registerer() {
         }
         const res = await register({name: account, password: password});
         console.log(JSON.stringify(res));
-        if (res.data.status == 400) {
+        if (res.status == 400) {
             alert('Account Already exist!');
-        } else if (res.data.status == 200 && res.data.sucess) {
-            console.log('register sucessfully!');
-            window.location.href=`/login?name=${res.data.name}`;
+        } else if (res.status == 200) {
+            console.log('register sucessfully for', res.data);
         } else {
             confirm.log('Unknown Error!');
         }

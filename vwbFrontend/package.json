@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "axios-mock-adapter": "^1.22.0",
     "reach": "^1.0.1",
     "react": "^18.3.1",
+    "react-cookie": "^7.1.4",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.1"
   },

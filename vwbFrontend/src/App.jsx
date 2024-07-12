@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import { LoginPage } from './pages/LoginPage';
+import { useState, useEffect, } from 'react';
+import { useCookies } from 'react-cookie';
+import './App.css';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,17 +8,18 @@ import {
   Navigate,
   Link, 
 } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
+import { BoardPage } from './pages/BoardPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AboutPage } from './pages/AboutPage';
 import { HomePage } from './pages/HomePage';
 function App() {
-
+  const [cookies, setCookies] = useCookies(['authorized', 'authToken']);
   useEffect(()=>{
-    localStorage.setItem('authToken', '3');
-    localStorage.setItem('name', 'vdack');
+    setCookies('authorized', false, {path: '/', maxAge: 60*60});
   }, [])
 
-  let authorized = localStorage.getItem('authToken').length > 0;
+  let authorized = cookies.authorized;
 
   return (
     <>
@@ -28,7 +29,8 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={authorized ? (<Navigate to="/home" />) : (<LoginPage />)} />
           <Route path="/register" element={authorized? (<Navigate to="/home" />) : (<RegisterPage />)} />
-          <Route path="/about" element={<AboutPage />} /> 
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/board" element={<BoardPage />} /> 
         </Routes>
       </Router>
     </>
