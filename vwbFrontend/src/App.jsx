@@ -16,7 +16,10 @@ import { HomePage } from './pages/HomePage';
 function App() {
   const [cookies, setCookies] = useCookies(['authorized', 'authToken']);
   useEffect(()=>{
-    setCookies('authorized', false, {path: '/', maxAge: 60*60});
+    if (!cookies['authorized']) {
+      setCookies('authorized', false, {path: '/', maxAge: 60*60, sameSite: 'none',});
+    }
+    
   }, [])
 
   let authorized = cookies.authorized;

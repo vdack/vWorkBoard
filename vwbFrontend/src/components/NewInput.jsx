@@ -1,80 +1,81 @@
-import { useState } from "react";
-import './NewInput.css';
+import { useRef } from "react";
 import reactLogo from "../assets/react.svg";
-
+import { Button, Container, CssBaseline, TextField, Typography, FormControlLabel, 
+    Checkbox, Avatar, ThemeProvider, Box,
+    createTheme, 
+} from "@mui/material";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export function AccPswdInputer(paras) {
-    
+    const defaultTheme = createTheme();
 
-    const [account, setAccount] = useState('');
-    const [password, setPassword] = useState('');
-    const [ifHiddenPassword, setIHP] = useState(true);
-
+    const accountRef = useRef(null);
+    const passwordRef = useRef(null);
     const submitName = paras.submitName;
     const onSubmit = (event) => {
         event.preventDefault();
-        const tempAccount = account;
-        const tempPassword = password;
-        setAccount('');
-        setPassword('');
+        const tempAccount = accountRef.current.value;
+        const tempPassword = passwordRef.current.value;
         paras.onSubmit(tempAccount, tempPassword);
+        accountRef.current.value = '';
+        passwordRef.current.value = '';
         
     }
 
-    const changeAccount = (event) => {
-        setAccount(event.target.value);
-    }
-    const changePassword = (event) => {
-        setPassword(event.target.value);
-    }
-
-    // return (
-    //     <div>
-    //         <div className="NewInput-logoContainer">
-    //             <img src={reactLogo} className="Loginer-logo"/>
-    //         </div>
-    //         <h1>{submitName}</h1>
-    //         <div className="NewInput-container">
-    //             <h3>Account: </h3>
-    //             <input 
-    //                 type="text"
-    //                 value={account}
-    //                 onChange={changeAccount}
-    //             />
-    //         </div>
-
-    //         <div className="NewInput-container">
-    //             <h3>Password: </h3>
-    //             <input 
-    //                 type="password"
-    //                 value={password}
-    //                 onChange={changePassword}
-    //             />
-    //         </div>
-
-    //         <button className="NewInput-submitButton" onClick={onSubmit}>{submitName}</button>
-    //     </div>
-    // );
-
     return (
-        <div className="NewInput-container">
-            <div className="logoContainer">
-                <img src={reactLogo} className="Loginer-logo"/>
-            </div>
-            <h2>{submitName}</h2>
-            <form onSubmit={onSubmit} >
-                <label>
-                    Name: 
-                    <input type="text" value={account} onChange={changeAccount} />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={changePassword} />
-                </label>
-                <br />
-                <input type="submit" value={submitName} />
-            </form>
-        </div>
+        <ThemeProvider theme={defaultTheme}>
+            <Container component='main' maxWidth='xs'>
+                <CssBaseline />
+                <Box sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}>
+                    
+                    <Avatar src={reactLogo} sx={{ m: 1,p: 0.2 }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                
+                    <Typography component="h1" variant="h5">
+                        {submitName}
+                    </Typography>
+
+                    <Box component="form" onSubmit={onSubmit} noValidate>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Name"
+                            autoFocus
+                            inputRef={accountRef}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            inputRef={passwordRef}
+                        />
+                        
+                        <Button 
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            
+                        >
+                            {submitName}
+                        </Button>
+                        
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
     );
 }

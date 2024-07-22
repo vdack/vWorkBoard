@@ -4,7 +4,7 @@ export function RegisterPage() {
     return (
         <div>
             <Registerer />
-            <ButtomBar />
+            <ButtomBar location='register'/>
         </div>
 
     );

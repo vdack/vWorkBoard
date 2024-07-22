@@ -4,7 +4,7 @@ export function LoginPage () {
     return (
         <div>
             <Loginer />
-            <ButtomBar />
+            <ButtomBar location='login'/>
         </div>
 
     );

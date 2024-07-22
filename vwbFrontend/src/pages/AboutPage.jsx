@@ -1,47 +1,50 @@
-import "./AboutPage.css";
-import {ButtomBar} from "../components/ButtomBar.jsx";
-export function AboutPage() {
-    return(
-        <div className="AboutPage-container">
-            <section>
-                <h2 className="AboutPage-header">About the Web:</h2>
-                <div className="AboutPage-body">
-                    <p>Big Homework for Web Development, NJU 2024</p>
-                    <p>A Very Simple WorkBoard Web Application</p>
-                </div>
-            </section>
-                
-            <section>
-                <h2 className="AboutPage-header">About me:</h2>
-                <div>
-                    <p className="AboutPage-body">a SE Undergraduate in NJU.</p>
-                    <p className="AboutPage-body">221900009, Chen P.X.</p>
-                    <div>
-                        <h3 className="AboutPage-subHeader">QQ: </h3>
-                        <p className="AboutPage-contact">1226814416</p>
-                    </div>
-                    <div>
-                        <h3 className="AboutPage-subHeader">e-mail: </h3>
-                        <p className="AboutPage-contact">thousandawn@126.com</p>
-                    </div>
-                        
-                    <div>
-                        <h3 className="AboutPage-subHeader">GitHub: </h3>
-                        <p className="AboutPage-contact"><a href="https://github.com/vdack">vdack</a></p>
-                    </div>
-                    
-                    
-                </div>
-            </section>
 
-            <section>
-                <p className="AboutPage-end">
-                    For More Information, Please Contact Me.
-                </p>
-            </section>
-            
-            
-            <ButtomBar />
-        </div>
+import {ButtomBar} from "../components/ButtomBar.jsx";
+import { createTheme, ThemeProvider, Box, CssBaseline, 
+    Typography, Container, Divider, Link
+ } from "@mui/material";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import EmailIcon from '@mui/icons-material/Email';
+export function AboutPage() {
+    const defaultTheme = createTheme();
+
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <Box>
+                <CssBaseline />
+                <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="sm">
+                    <Typography variant="h3" component="h1" gutterBottom>
+                        About The Web:
+                    </Typography>
+                    <Box sx={{ml:4}}>
+                        <Typography variant="body1" fontSize={20}>Project for Web Development, NJU.</Typography>
+                        <Typography variant="body1" fontSize={20} gutterBottom> A Very Simple WorkBoard Web Application. </Typography>
+                        <Link href="https://github.com/vdack/vWorkBoard" target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center',  }}>
+                            <GitHubIcon sx={{ mr: 1 , color: 'black'}} />
+                            Project Source
+                        </Link>
+                    </Box>
+                    <Divider sx={{ my: 4 }} />
+                    <Typography variant="h3" component="h1" gutterBottom>
+                        About The Me:
+                    </Typography>
+                    <Box sx={{ml:4}}>
+                        <Typography variant="body1" fontSize={20}>A SE Undergraduate in NJU</Typography>
+                        <Typography variant="body1" fontSize={20} gutterBottom>221900009 Chen P.X.</Typography>
+                        <Link href="https://github.com/vdack" gutterBottom target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center',  }}>
+                            <GitHubIcon sx={{ mr: 1 , color: 'black'}} />
+                            My GitHub
+                        </Link>
+                        <Link href="mailto:thousandawn@126.com" gutterBottom target="_blank" rel="noopener noreferrer" sx={{ display: 'flex', alignItems: 'center',  }}>
+                            <EmailIcon sx={{ mr: 1 , color: 'black'}} />
+                            My Email
+                        </Link>
+                        <Typography variant="body1" fontSize={25} gutterBottom>For More Information, Please Contact Me.</Typography>
+                    </Box>
+                    <Divider sx={{ my: 4 }} />
+                </Container>
+                <ButtomBar location='about'/>
+            </Box>
+        </ThemeProvider>
     );
 };

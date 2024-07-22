@@ -1,31 +1,46 @@
-import "./HomeBoard.css";
+import { Typography, Box, Button, Divider } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import PanToolAltIcon from '@mui/icons-material/PanToolAlt';
 export function HomeBoard() {
     const navigate = useNavigate();
 
-    const [cookies, setCookies, removeCookies] = useCookies(['authorized', 'authToken', 'name']);
+    const [cookies, setCookies, removeCookies] = useCookies(['authorized', 'authToken', 'name', 'id', 'password']);
     const logout = () => {
-        setCookies('authorized', false, {path: '/', maxAge: 60*60});
-        removeCookies('authorized', {path: '/'});
-        removeCookies('name', {path: '/'});
+        setCookies('authorized', false, {path: '/', maxAge: 60*60, sameSite: 'none', });
+        removeCookies('authToken', {path: '/', sameSite: 'none', });
+        removeCookies('name', {path: '/', sameSite: 'none', });
+        removeCookies('password', {path: '/', sameSite: 'none', });
+        removeCookies('id', {path: '/', sameSite: 'none', });
     }
     const unauthorizedBoard = (
-    <div className="HomeBoard-unauthorized">
-        <p className="HomeBoard-body">Have Not Logined Yet!</p>
-        <p className="HomeBoard-body">Please Click Below to Start.</p>
-    </div>
+        <Box sx={{my:4, textAlign: "center"}}>
+            <Typography variant="caption" fontSize={20} component="div" >
+                Haven't logged yet.
+            </Typography>
+            <Typography variant="caption" fontSize={20}  component="div" gutterBottom>
+                Click Button Below to Login or Register.
+            </Typography>
+            <PanToolAltIcon sx={{transform:'rotate(180deg)', fontSize:30, }} />
+        </Box>
+    
     );
     const authorizedBoard = (
-        <div className="HomeBoard-authorized">
-            <p className="HomeBoard-body">Hello, {cookies.name} !</p>
-            
-            <div className="button-container">
-                <button onClick={() => {cookies.authorized? navigate('/board'): navigate('/');}} className="action-button">WorkBoard</button>
-                    <div className="divider"></div>
-                <button onClick={logout} className="action-button">Log Out</button>
-            </div>
-        </div>
+        <Box sx={{my:4, textAlign: "center",}}>
+            <Typography variant="caption" fontSize={20} component="div" >
+                Hello, {cookies.name} !
+            </Typography>
+            <Box display={"flex"}>
+                <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}}
+                    onClick={() => {cookies.authorized? navigate('/board'): navigate('/');}}>
+                    WorkBoard
+                </Button>
+                <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+                <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}} onClick={logout}>
+                    Log Out
+                </Button>
+            </Box>
+        </Box>
     );
 
 
