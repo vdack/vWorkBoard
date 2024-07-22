@@ -1,10 +1,13 @@
-import './SideBar.css';
+
 import { Link } from 'react-router-dom';
 import { getUserByProject, getProjectByUser } from '../../api/projectApi';
 import { useEffect, useState } from 'react';
 import { Lister } from './Lister.jsx';
 import { useCookies } from 'react-cookie';
 import { PopupTrigger } from '../common/PopupTrigger.jsx';
+import { Drawer, Divider, Toolbar, ListItemButton, ListItemText, List, ListSubheader, ListItemIcon,
+    Typography } from '@mui/material';
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 export function SideBar() {
     const[users, setUsers] = useState([]);
     const[currentProject, setCurrentProject] = useState({selected: false});
@@ -36,21 +39,20 @@ export function SideBar() {
 
     const createProjectItem = (item) => {
         return (
-            <div className='SideBar-item'>
-                <button className='SideBar-subHeader' onClick={() => {changeProject(item.id);}}>
-                    {item.name}
-                </button>
-            </div>
+            <ListItemButton  onClick={() => {changeProject(item.id);}}>
+                <ListItemIcon>
+                    <SpaceDashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary={item.name} />
+            </ListItemButton>
         );
     }
 
     const createItem = (item) => {
         return (
-            <div className='SideBar-item'>
-                <span className='SideBar-subHeader'>
-                    {item.name}
-                </span>
-            </div>
+            <ListItemText>
+                {item.name}
+            </ListItemText>
         );
     };
 
@@ -60,15 +62,29 @@ export function SideBar() {
 
     }, []);
     
-    return (
-        <div className="SideBar-container">
-            <h2>Menu</h2>
-            <div className='Sidebar-list'>
-                <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} />
-                <PopupTrigger className='Sidebar-adder' />
-                <Lister name={currentProject.name} itemList={users} mapFunction={createItem} />
-            </div>
+    // return (
+    //     <div className="SideBar-container">
+    //         <h2>Menu</h2>
+    //         <div className='Sidebar-list'>
+    //             <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} />
+    //             <PopupTrigger className='Sidebar-adder' />
+    //             <Lister name={currentProject.name} itemList={users} mapFunction={createItem} />
+    //         </div>
             
-        </div>
+    //     </div>
+    // );
+    return (
+        <Drawer variant='permanent' open='true' sx={{position: 'relative',minWidth:300} }>
+            <Typography variant='h3' align='center'>
+                Lists
+            </Typography>
+            <Divider />
+
+            <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} />
+            <Divider />
+            {/* <PopupTrigger className='Sidebar-adder' /> */}
+            <Lister name={currentProject.name} itemList={users} mapFunction={createItem} />
+            
+        </Drawer>
     );
 };

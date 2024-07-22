@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import './Lister.css'
+import { List, ListItem, ListItemIcon, ListItemButton, ListItemText, ListSubheader, Collapse } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 /**
  * a foldable list
- * @param {name, itemList, mapFuncion} props 
+ * @param {Object} props
+ * @param {string} props.name 
+ * @param {list} props.itemList 
+ * @param {function} props.mapFunction
  * @returns - a lister
  */
 export const Lister = (props) => {
@@ -15,22 +19,31 @@ export const Lister = (props) => {
     }
     const showItem = (item) => {
         return (
-            <li className='Lister-item' key={item.id}>
+            <>
                 {props.mapFunction(item)}
-            </li>
+            </>
         );
     }
     console.log(props.name, 'current items:', props.itemList);
     return (
-        <div className='Lister-container'>
-            <button className='Lister-button' onClick={changeList}>
-                <span className='Lister-header'>
-                    {props.name}
-                </span>
-                {isFolded? '+' : '-'}
-            </button>
+        <List sx={{minWidth:200}}>
+            <ListItemButton onClick={changeList}>
+                <ListItemText primary={props.name} />
+                {isFolded? <ExpandMore color='info'/> : <ExpandLess color='success'/>}
+            </ListItemButton>
+            <Collapse in={!isFolded} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                {/* <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                    <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary="Starred" />
+                </ListItemButton> */}
+                {!isFolded && props.itemList.map(showItem)}
+                </List>
+            </Collapse>
 
-            {!isFolded && props.itemList.map(showItem)}
-        </div>
+            
+        </List>
     );
 };
