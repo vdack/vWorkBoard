@@ -18,3 +18,10 @@ export const login = async (user) => {
     const response = await userInterface.post('/login', data);
     return response.data;
 };
+
+export const getToken = async (user) => {
+    const data = {name: user.name, password: user.password};
+    console.log('get Token with Data: ', data);
+    const response = await userInterface.post('/getToken', data);
+    return response.data;
+}

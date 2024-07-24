@@ -1,5 +1,5 @@
 import { MidwayConfig } from '@midwayjs/core';
-import { User } from '../entity/user';
+import { User, Token } from '../entity/user';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -22,7 +22,7 @@ export default {
         synchronize: true,
         logging: true,
 
-        entities: [User],
+        entities: [User, Token],
       },
     },
 

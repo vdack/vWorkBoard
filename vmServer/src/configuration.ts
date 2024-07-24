@@ -8,6 +8,7 @@ import * as jwt from '@midwayjs/jwt';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
+import { AuthorizeMiddleware } from './middleware/authorize.middleware';
 import * as crossDomain from '@midwayjs/cross-domain';
 
 
@@ -31,7 +32,7 @@ export class MainConfiguration {
 
   async onReady() {
     // add middleware
-    this.app.useMiddleware([ReportMiddleware]);
+    this.app.useMiddleware([ReportMiddleware, AuthorizeMiddleware]);
     // add filter
     // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
   }

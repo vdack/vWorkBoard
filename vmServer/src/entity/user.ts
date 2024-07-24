@@ -13,3 +13,16 @@ export class User {
   password: string;
 
 };
+
+@Entity('token')
+export class Token {
+  @PrimaryColumn()
+  uid: number;
+
+  @Column()
+  lastAuthorized: Date;
+
+  @Column()
+  authToken: string;
+
+}

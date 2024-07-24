@@ -2,6 +2,7 @@ import { Typography, Box, Button, Divider } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import PanToolAltIcon from '@mui/icons-material/PanToolAlt';
+
 export function HomeBoard() {
     const navigate = useNavigate();
 

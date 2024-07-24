@@ -1,12 +1,23 @@
 import { SideBar } from "../components/workboard/SideBar";
-import { Box } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import  Dashboard  from "../components/workboard/DashBoard.jsx";
-export function BoardPage() {
+import TopBar from "../components/workboard/TopBar.jsx";
+import { grey } from "@mui/material/colors";
+import { ProjectBoard } from "../components/workboard/ProjectBoard.jsx";
+/**
+ * @param {Object} props
+ * @param {number} props.pid 
+ * @returns 
+ */
+export function BoardPage(props) {
     return (
-        <Box display={"flex"} sx={{backgroundColor:'grey'}}>
+        <Box display={"flex"}  sx={{backgroundColor: 'rgb(213, 228, 241)', height: '100vh'}}>
+            <TopBar />
             <SideBar />
             {/* <Dashboard /> */}
-            <p>Hello, Borad Page!</p>
+            <CssBaseline />
+            <ProjectBoard />
+            
         </Box>
     );
 }

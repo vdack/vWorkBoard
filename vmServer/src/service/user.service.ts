@@ -1,15 +1,18 @@
 import { IUser } from './../interface';
-import { Provide } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
 import { IUserOptions, ILoginUser } from '../interface';
 import { User } from '../entity/user';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
-
+import { JwtService } from '@midwayjs/jwt';
 @Provide()
 export class UserService {
 
   @InjectEntityModel(User)
   userModel: Repository<User>;
+
+  @Inject()
+  jwtService: JwtService;
 
   async getUser(options: IUserOptions) {
     return {
@@ -55,11 +58,13 @@ export class UserService {
       console.log('password incorrect');
       return {status: 401};
     }
+    const token = this.jwtService.sign({id: findres.id, name: para.name, password: para.password});
     return {
       status: 200,
       id: findres.id,
       name: para.name,
-      password: findres.password
+      password: findres.password,
+      token: token,
     };
   }
 

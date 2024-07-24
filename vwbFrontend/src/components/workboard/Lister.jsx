@@ -1,12 +1,25 @@
 import { useState } from 'react';
-import { List, ListItem, ListItemIcon, ListItemButton, ListItemText, ListSubheader, Collapse } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { List, styled, ListItem, IconButton, 
+    ListItemIcon, ListItemButton, ListItemText, ListSubheader, Collapse } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
 
 /**
  * a foldable list
  * @param {Object} props
  * @param {string} props.name 
- * @param {list} props.itemList 
+ * @param {[]} props.itemList
+ * @param {function} props.adder 
  * @param {function} props.mapFunction
  * @returns - a lister
  */
@@ -17,33 +30,42 @@ export const Lister = (props) => {
     const changeList = () => {
         setFolded(!isFolded);
     }
-    const showItem = (item) => {
-        return (
-            <>
-                {props.mapFunction(item)}
-            </>
-        );
-    }
     console.log(props.name, 'current items:', props.itemList);
     return (
         <List sx={{minWidth:200}}>
-            <ListItemButton onClick={changeList}>
+            {/* <ListItemButton onClick={changeList}>
                 <ListItemText primary={props.name} />
                 {isFolded? <ExpandMore color='info'/> : <ExpandLess color='success'/>}
-            </ListItemButton>
+            </ListItemButton> */}
+            <ListItem>
+                <IconButton>
+                    <AddIcon />
+                </IconButton>
+                <ListItemText primary={props.name} />
+                <ExpandMore
+                expand={!isFolded}
+                onClick={changeList}
+                aria-expanded={!isFolded}
+                aria-label="show more">
+                    <ExpandMoreIcon />
+                </ExpandMore>
+            </ListItem>
             <Collapse in={!isFolded} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                {/* <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemIcon>
-                    <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText primary="Starred" />
-                </ListItemButton> */}
-                {!isFolded && props.itemList.map(showItem)}
+                {!isFolded && props.itemList.map(props.mapFunction)}
                 </List>
-            </Collapse>
-
-            
+            </Collapse>            
         </List>
     );
 };
+
+export function ProjectLister(props) {
+    return(<></>);
+}
+
+export function UserLister(props) {
+    return (<></>);
+}
+export function TaskLister(props) {
+    return (<></>);
+}
