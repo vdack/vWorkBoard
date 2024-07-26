@@ -1,6 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core';
-import { User, Token } from '../entity/user';
-
+import { User, Token, Project, SubProject, SubTask, TComment } from '../entity/dbEntities';
+import { Project_User } from '../entity/dbRelations';
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1720499587314_8790',
@@ -22,7 +22,7 @@ export default {
         synchronize: true,
         logging: true,
 
-        entities: [User, Token],
+        entities: [User, Token, Project, SubProject, SubTask, TComment, Project_User],
       },
     },
 

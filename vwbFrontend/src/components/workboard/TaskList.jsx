@@ -7,9 +7,17 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import { SingleTask } from './SingleTask.jsx';
 
-export function TaskList() {
-
-    
+/**
+ * 
+ * @param {Object} props
+ * @param {[]} props.tasks 
+ * @returns 
+ */
+export function TaskList(props) {
+  // console.log('task list get tasks:', props.tasks);
+  const displayTask = () => {
+    return props.tasks.map((task) => {return <Box key={task.tid}><SingleTask task={task} /></Box>});
+  }
 
     return (
         <List subheader={
@@ -22,10 +30,14 @@ export function TaskList() {
             </Box>
             }>
 
-            <Divider sx={{borderBottomWidth:2}}/>    
+            <Divider sx={{borderBottomWidth:2}}/>
+            {/* <Box>
             <SingleTask content='TASK CONTENT.' />
+            </Box>  
+            
             <SingleTask content='ANOTHER TASK.' />
-            <SingleTask content='MORE CONTNENT HERE FOR DISPLAY.' />
+            <SingleTask content='MORE CONTNENT HERE FOR DISPLAY.' /> */}
+          {displayTask()}
         </List>
     );
 }

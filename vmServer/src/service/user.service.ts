@@ -1,7 +1,7 @@
 import { IUser } from './../interface';
 import { Inject, Provide } from '@midwayjs/core';
 import { IUserOptions, ILoginUser } from '../interface';
-import { User } from '../entity/user';
+import { User } from '../entity/dbEntities';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@midwayjs/jwt';
@@ -58,10 +58,10 @@ export class UserService {
       console.log('password incorrect');
       return {status: 401};
     }
-    const token = this.jwtService.sign({id: findres.id, name: para.name, password: para.password});
+    const token = this.jwtService.sign({id: findres.uid, name: para.name, password: para.password});
     return {
       status: 200,
-      id: findres.id,
+      id: findres.uid,
       name: para.name,
       password: findres.password,
       token: token,
@@ -78,20 +78,20 @@ export class UserService {
     if (!findres) {
       return {found: false};
     } else {
-      return {found: true, id: findres.id, name: findres.name}
+      return {found: true, id: findres.uid, name: findres.name}
     }
   }
 
   async getUserById(id: number) {
     const findres = await this.userModel.findOne({
       where: {
-        id
+        uid: id
       },
     });
     if (!findres) {
       return {found: false};
     } else {
-      return {found: true, id: findres.id, name: findres.name}
+      return {found: true, id: findres.uid, name: findres.name}
     }
   }
 }

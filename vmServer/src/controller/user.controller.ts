@@ -39,7 +39,7 @@ export class APIController {
     const res = await this.userService.login({name, password});
     if (res.status == 200) {
       const token = this.jwtService.generateToken({id: res.id, name: res.name, password: res.password});
-      return {name: 'Login', code: '200', status: 200, data: {name:res.name, token}};
+      return {name: 'Login', code: '200', status: 200, data: {name:res.name,id: res.id, token: token}};
     }
     if (res.status == 400) {
       return new httpError.BadRequestError('Name Not Exists.');

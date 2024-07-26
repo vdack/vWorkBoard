@@ -23,16 +23,31 @@ const ExpandMore = styled((props) => {
 /**
  * 
  * @param {Object} props
- * @param {string} name 
- * @param {string} content
+ * @param {Object} props.task
+ * @param {string} props.task.header 
+ * @param {string} props.task.content
+ * @param {Date} props.task.date
+ * @param {boolean} props.task.finished
+ * @param {[]} props.task.comments
  * @returns 
  */
 export function SingleTask(props) {
+  const task = props.task;
 
   const [expanded, setExpanded] = React.useState(false);
+  const [finished, setFinished] = React.useState(task.finished);
   const handleExpandClick = ()=> {
     setExpanded(!expanded);
-  }
+  };
+  const handleFinish = () => {
+    setFinished(!finished);
+    console.log('finished changed.');
+
+    // TODO --------------------------------
+    // TODO |POST THE STATUS TO THE SERVER.|
+    // TODO --------------------------------
+
+  };
 
   return (
     <React.Fragment>
@@ -47,14 +62,14 @@ export function SingleTask(props) {
         }}}>
         <Box m={2} >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <ListItemText primary='header' />
+                  <ListItemText primary={task.header} />
                   <Typography variant="body2" color="textSecondary">
-                      [Date]
+                      {task.date}
                   </Typography>
           </Box>
           <Divider sx={{maxWidth:90}}/>
           <Typography variant="body1">
-            {props.content}
+            {task.content}
           </Typography>
         </Box>
         <Box sx={{display: 'flex', justifyContent: 'right'}}>
@@ -68,12 +83,12 @@ export function SingleTask(props) {
           <IconButton><InsertDriveFileIcon/></IconButton>
           <IconButton><DeleteIcon/></IconButton>
           <IconButton><EditIcon/></IconButton>
-          <Checkbox/>
+          <Checkbox checked={finished} onChange={handleFinish}/>
         </Box>
         
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Divider />
-          <CommentSheet />
+          <CommentSheet comments={task.comments}/>
         </Collapse>
       </Paper>
     </ListItem>

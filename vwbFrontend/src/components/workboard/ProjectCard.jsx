@@ -28,20 +28,26 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-
-export default function ProjectCard() {
+/**
+ * 
+ * @param {Object} props 
+ * @param {Object} props.project
+ * @returns 
+ */
+export default function ProjectCard(props) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const project = props.project;
   return (
-    <Card sx={{ maxWidth: 345 , backgroundColor: 'grey.50'}}>
+    <Card sx={{ width: 345 , backgroundColor: 'grey.50'}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            N
+            {project.name[0]}
           </Avatar>
         }
         action={
@@ -49,13 +55,12 @@ export default function ProjectCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="--Project Name Here--"
-        subheader="Created Date Here"
+        title={project.name}
+        subheader={project.date}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          Here Are Some Simple Discription For The Project. 
-          Just Wirte Some You Like.
+          {project.discription}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -73,15 +78,8 @@ export default function ProjectCard() {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit >
         <CardContent >
-          {/* <List subheader="Task:">
-            <ListItem >
-              <ListItemText>
-                <Typography paragraph>Task Here:</Typography>
-              </ListItemText>
-              
-            </ListItem>
-          </List> */}
-          <TaskList />
+          
+          <TaskList tasks={project.subTask}/>
 
         </CardContent>
       </Collapse>

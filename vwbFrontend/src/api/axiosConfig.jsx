@@ -12,7 +12,7 @@ export const userInterface = axios.create(
         timeout: 10000
     }
 );
-export const projectInterface = axios.create(
+export const mock_projectInterface = axios.create(
     {
         baseURL: 'http://localhost:5173/project', 
         timeout: 10000

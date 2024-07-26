@@ -13,6 +13,8 @@ import { BoardPage } from './pages/BoardPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AboutPage } from './pages/AboutPage';
 import { HomePage } from './pages/HomePage';
+import { NotFoundPage } from './errorPage/NotFoundPage';
+import { UnauthorizedPage } from './errorPage/UnahtorizedPage';
 function App() {
   const [cookies, setCookies] = useCookies(['authorized', 'authToken']);
   useEffect(()=>{
@@ -34,6 +36,8 @@ function App() {
           <Route path="/register" element={authorized? (<Navigate to="/home" />) : (<RegisterPage />)} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/board" element={<BoardPage />} /> 
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </>

@@ -32,11 +32,11 @@ export function Loginer () {
             setPswdError(true);
         } else if (res.status == 200) {
             console.log('login sucessful');
-            setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });
             setCookies('authToken', res.data.token, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('name', res.data.name, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('id', res.data.id, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('password', password, {path: '/', maxAge: 60*60, sameSite: 'none',});        
+            setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });
         } else {
             console.log('Unkown Error!');
         }
