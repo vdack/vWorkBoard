@@ -3,7 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { UserService } from '../service/user.service';
 import { JwtService } from '../service/jwt.service';
 @Controller('/user')
-export class APIController {
+export class UserController {
   @Inject()
   ctx: Context;
   @Inject()
@@ -38,7 +38,8 @@ export class APIController {
     console.log('login for:', name, password);
     const res = await this.userService.login({name, password});
     if (res.status == 200) {
-      const token = this.jwtService.generateToken({id: res.id, name: res.name, password: res.password});
+      const token = await this.jwtService.generateToken({id: res.id, name: res.name, password: res.password});
+      console.log('generate a token: ',token);
       return {name: 'Login', code: '200', status: 200, data: {name:res.name,id: res.id, token: token}};
     }
     if (res.status == 400) {

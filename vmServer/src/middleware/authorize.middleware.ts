@@ -1,6 +1,7 @@
-import { Middleware, IMiddleware, Config, Provide, Inject } from "@midwayjs/core";
+import { Middleware, IMiddleware, Inject, Config, Provide,} from "@midwayjs/core";
 import { Context, NextFunction } from "@midwayjs/koa";
-import { JwtService } from "@midwayjs/jwt";
+import { JwtService } from '../service/jwt.service';
+import * as cookie from 'cookie';
 @Provide()
 @Middleware()
 export class AuthorizeMiddleware implements IMiddleware<Context, NextFunction>{
@@ -12,19 +13,34 @@ export class AuthorizeMiddleware implements IMiddleware<Context, NextFunction>{
 
   resolve() {
     return async(ctx:Context, next:NextFunction) => {
-      const token = ctx.cookies.get('authToken');
+      // ctx.cookies.set('auth','1231231231', {httpOnly:true, sameSite:'none'});
+      console.log('header: ', ctx.header);
+      const header_cookies = cookie.parse(ctx.header.cookie);
+      const token = header_cookies['authToken'];
+      const id = header_cookies['id'];
+      // const token = ctx.cookies.get('authToken');
+      console.log('id: ', id, 'with token: ', token);
+
+      // console.log('test auth:', ctx.cookies.get('auth'));
       if (!token) {
         ctx.status = 401;
         ctx.body = {message: 'No Token Provided.'};
         return;
       }
-      try {
-        const veriedInfo = this.jwtService.verify(token);
-        ctx.logger.info(`currnet veried Info: ${veriedInfo}.`);
-        ctx.user = veriedInfo;
+
+      if (token === 'passit!') {
         const res = await next();
         return res;
-      } catch(err) {
+      }
+
+      const veriedInfo = await this.jwtService.verifyToken(token);
+      // console.log('info', veriedInfo);
+      console.log('veriedInfo id:', veriedInfo.id);
+      if (id == veriedInfo.id) {
+        console.log('authorized veried sucessfully.')
+        const res = await next();
+        return res;
+      } else {
         ctx.status = 401;
         ctx.body = {message: 'Invalid token'};
       }

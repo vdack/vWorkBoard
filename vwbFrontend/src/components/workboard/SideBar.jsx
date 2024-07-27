@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from 'react-router-dom';
-import { getUserByProject, getProjectByUser } from '../../api/mock_projectApi.jsx';
+import { getProjects, getUsers } from '../../api/projectApi.jsx';
 import { useEffect, useState } from 'react';
 import { Lister } from './Lister.jsx';
 import { useCookies } from 'react-cookie';
@@ -22,51 +22,51 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 export function SideBar(props) {
   const navigate = useNavigate();
   const[users, setUsers] = useState([]);
-  const[currentProject, setCurrentProject] = useState({selected: false});
+  const[currentProject, setCurrentProject] = useState({selected: false, id: -1, name:''});
   const[projects, setProjects] = useState([]);
   const[cookies, setCookies] = useCookies([]);
 
   const fetchProjects = async() => {
     try {
-      const res = await getProjectByUser(cookies.id);
+      const res = await getProjects(cookies.id);
       console.log('fetch projects and get:', res);
-      setProjects(res.projects);
+      setProjects(res.data);
     } catch(err) {
-      console.log('Error when fetch:',err);
+      console.log('Error when fetch projects:',err);
       navigate('/unauthorized');
     }
     
   }
-  const fetchUsers = async() => {
-    try{
-      if (!currentProject.selected) {
-        return;
-      }
-      const res = await getUserByProject(currentProject.id);
-      console.log('fetch users and get: ', res);
-      setUsers(res.users);
-    } catch(err) {
-      console.log('Error when fetch:',err);
-      navigate('/unauthorized');
-    }
-  }
+  // const fetchUsers = async() => {
+  //   try{
+  //     if (!currentProject.selected) {
+  //       return;
+  //     }
+  //     const res = await getUsers(currentProject.id);
+  //     console.log('fetch users and get: ', res);
+  //     setUsers(res.data);
+  //   } catch(err) {
+  //     console.log('Error when fetch users:',err);
+  //     // navigate('/unauthorized');
+  //   }
+  // }
 
     const changeProject = async (id) => {
-        console.log('current id:', id);
-        console.log('current projects:', projects);
-        const find = projects.find(p => p.id === id);
+        // console.log('current id:', id);
+        // console.log('current projects:', projects);
+        const find = projects.find(p => p.pid === id);
         
-        const res = await getUserByProject(id);
+        const res = await getUsers(id);
         setCurrentProject({selected: true, id: find.id, name: find.name});
-        setUsers(res.users);
+        setUsers(res.data);
         console.log('current users:', users);
         props.setPid(id);
     };
 
     const createProjectItem = (item) => {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} key={item.id}>
-                <ListItemButton  onClick={() => {changeProject(item.id);}} >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} key={item.pid}>
+                <ListItemButton  onClick={async() => {await changeProject(item.pid);}} >
                     <ListItemIcon>
                         <SpaceDashboardIcon />
                     </ListItemIcon>
@@ -82,7 +82,7 @@ export function SideBar(props) {
 
     const createItem = (item) => {
         return (
-            <ListItem key={item.id}>
+            <ListItem key={item.uid}>
                 <ListItemIcon>
                         <PersonIcon />
                 </ListItemIcon>
@@ -96,7 +96,7 @@ export function SideBar(props) {
 
   useEffect(() => {
     fetchProjects();
-    fetchUsers();
+    // fetchUsers();
   }, []);
 
     return (

@@ -30,7 +30,7 @@ export const Lister = (props) => {
     const changeList = () => {
         setFolded(!isFolded);
     }
-    console.log(props.name, 'current items:', props.itemList);
+    // console.log(props.name, 'current items:', props.itemList);
     return (
         <List sx={{minWidth:200}}>
             {/* <ListItemButton onClick={changeList}>

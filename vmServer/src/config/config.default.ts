@@ -8,7 +8,10 @@ export default {
     port: 7001,
   },
   cors: {
-    origin: '*',
+    origin: 'http://localhost:5173',
+    credentials: true,
+    allowMethods: ['GET','HEAD','PUT','POST','DELETE','PATCH'],
+    allowHeaders: 'Content-Type, Authorization, Cookie, X-Requested-With',
   },
   typeorm: {
     dataSource:{

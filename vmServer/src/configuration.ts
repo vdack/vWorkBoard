@@ -10,7 +10,7 @@ import * as jwt from '@midwayjs/jwt';
 import { ReportMiddleware } from './middleware/report.middleware';
 import { AuthorizeMiddleware } from './middleware/authorize.middleware';
 import * as crossDomain from '@midwayjs/cross-domain';
-
+// import * as cors from '@midwayjs/cors';
 
 @Configuration({
   imports: [
