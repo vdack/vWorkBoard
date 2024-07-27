@@ -9,6 +9,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MessageIcon from '@mui/icons-material/Message';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CommentSheet } from '../common/CommentSheet';
+import { getComments } from '../../api/projectApi';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -36,7 +37,11 @@ export function SingleTask(props) {
 
   const [expanded, setExpanded] = React.useState(false);
   const [finished, setFinished] = React.useState(task.finished);
-  const handleExpandClick = ()=> {
+  const [comments, setComments] = React.useState([]);
+  const handleExpandClick = async () => {
+    const res = await getComments(task.tid);
+    console.log('by tid: ', task.tid, 'get comments: ', res);
+    setComments(res.data);
     setExpanded(!expanded);
   };
   const handleFinish = () => {
@@ -88,7 +93,7 @@ export function SingleTask(props) {
         
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Divider />
-          <CommentSheet comments={task.comments}/>
+          <CommentSheet comments={comments}/>
         </Collapse>
       </Paper>
     </ListItem>

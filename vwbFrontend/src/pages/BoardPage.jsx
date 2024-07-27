@@ -26,7 +26,7 @@ export function BoardPage(props) {
             <SideBar setPid={setPid}/>
             {/* <Dashboard /> */}
             <CssBaseline />
-            <ProjectBoard />
+            <ProjectBoard pid={pid}/>
             
             </Box>
 

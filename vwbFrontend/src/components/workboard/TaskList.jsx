@@ -31,12 +31,6 @@ export function TaskList(props) {
             }>
 
             <Divider sx={{borderBottomWidth:2}}/>
-            {/* <Box>
-            <SingleTask content='TASK CONTENT.' />
-            </Box>  
-            
-            <SingleTask content='ANOTHER TASK.' />
-            <SingleTask content='MORE CONTNENT HERE FOR DISPLAY.' /> */}
           {displayTask()}
         </List>
     );

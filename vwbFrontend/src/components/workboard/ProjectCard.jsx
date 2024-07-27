@@ -17,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { TaskList } from './TaskList.jsx';
 import { AddCard } from '@mui/icons-material';
+import { getSubProjects, getTask } from '../../api/projectApi.jsx';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -36,12 +37,16 @@ const ExpandMore = styled((props) => {
  */
 export default function ProjectCard(props) {
   const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const [tasks, setTasks] = React.useState([]);
+  
 
   const project = props.project;
+  const handleExpandClick = async() => {
+    const findres = await getTask(project.spid);
+    console.log('by spid: ', project.spid, 'find tasks: ', findres);
+    setTasks(findres.data);
+    setExpanded(!expanded);
+  };
   return (
     <Card sx={{ width: 345 , backgroundColor: 'grey.50'}}>
       <CardHeader
@@ -56,7 +61,7 @@ export default function ProjectCard(props) {
           </IconButton>
         }
         title={project.name}
-        subheader={project.date}
+        subheader={project.last_modified_date}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
@@ -79,7 +84,7 @@ export default function ProjectCard(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit >
         <CardContent >
           
-          <TaskList tasks={project.subTask}/>
+          <TaskList tasks={tasks}/>
 
         </CardContent>
       </Collapse>

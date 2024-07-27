@@ -1,7 +1,7 @@
 import { Project_User } from './../entity/dbRelations';
 import {  Provide } from "@midwayjs/core";
 import { Repository, In } from "typeorm";
-import { User, Project, SubProject } from "../entity/dbEntities";
+import { User, Project, SubProject, SubTask, TComment } from "../entity/dbEntities";
 import { InjectEntityModel } from '@midwayjs/typeorm';
 @Provide()
 export class ProjectService {
@@ -13,6 +13,10 @@ export class ProjectService {
   project_userRelation: Repository<Project_User>;
   @InjectEntityModel(SubProject)
   subProjectModel: Repository<SubProject>;
+  @InjectEntityModel(SubTask)
+  taskModel: Repository<SubTask>;
+  @InjectEntityModel(TComment)
+  commentModel: Repository<TComment>;
 
   async getProjects(uid:number) {
     const findres = await this.project_userRelation.find({
@@ -58,4 +62,22 @@ export class ProjectService {
     console.log('by pid: ', pid, 'find subProjects: ', findres);
     return findres;
   }
+  async getTasks(spid: number) {
+    const findres = await this.taskModel.find({
+      where: {spid: spid, },
+    });
+    console.log('by spid:', spid, 'find tasks: ', findres);
+    return findres;
+  }
+  async getComments(tid: number) {
+    const findres = await this.commentModel.createQueryBuilder('comment')
+    .leftJoinAndSelect('comment.user', 'user')
+    .where('comment.tid = :tid', { tid: tid })
+    .select(['comment.cid', 'comment.tid', 'comment.uid', 'user.name', 'comment.content','comment.date'])
+    .getMany();
+
+    console.log('by tid:', tid, 'find comments: ', findres);
+    return findres.map((c) => {return {cid: c.cid, tid: c.tid, uid: c.uid, user_name: c.user.name, content: c.content, date: c.date}});
+  }
 };
+
