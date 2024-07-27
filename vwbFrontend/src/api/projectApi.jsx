@@ -9,6 +9,7 @@ export const getUsers = async (pid) => {
   const res = await projectInterface.get('/users', {params:{pid:pid}});
   return res.data;
 }
+
 export const getSubProjects = async (pid) => {
   const res = await projectInterface.get('/subProjects', {params:{pid: pid}});
   return res.data;
@@ -20,5 +21,11 @@ export const getTask = async (spid) => {
 }
 export const getComments = async (tid) => {
   const res = await projectInterface.get('/comments', {params: {tid: tid}});
+  return res.data;
+}
+
+export const createProject = async ({uid, pname}) => {
+  const usr_pjct = {uid: uid, name: pname};
+  const res = await projectInterface.post('/create', usr_pjct);
   return res.data;
 }

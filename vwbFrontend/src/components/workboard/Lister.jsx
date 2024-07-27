@@ -21,10 +21,11 @@ const ExpandMore = styled((props) => {
  * @param {[]} props.itemList
  * @param {function} props.adder 
  * @param {function} props.mapFunction
+ * @param {} props.adder
  * @returns - a lister
  */
 export const Lister = (props) => {
-
+    const Adder = props.adder;
     const [isFolded, setFolded] = useState(true);
 
     const changeList = () => {
@@ -33,14 +34,8 @@ export const Lister = (props) => {
     // console.log(props.name, 'current items:', props.itemList);
     return (
         <List sx={{minWidth:200}}>
-            {/* <ListItemButton onClick={changeList}>
-                <ListItemText primary={props.name} />
-                {isFolded? <ExpandMore color='info'/> : <ExpandLess color='success'/>}
-            </ListItemButton> */}
             <ListItem>
-                <IconButton>
-                    <AddIcon />
-                </IconButton>
+                <Adder />
                 <ListItemText primary={props.name} />
                 <ExpandMore
                 expand={!isFolded}

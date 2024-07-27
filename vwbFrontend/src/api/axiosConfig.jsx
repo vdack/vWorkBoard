@@ -20,6 +20,27 @@ export const projectInterface = axios.create(
         withCredentials: true,
     }
 );
+export const subProjectInterface = axios.create(
+    {
+        baseURL: 'http://localhost:7001/subproject',
+        timeout: 10000,
+        withCredentials: true,
+    }
+);
+export const taskInterface = axios.create(
+    {
+        baseURL: 'http://localhost:7001/task',
+        timeout: 10000,
+        withCredentials: true,
+    }
+);
+export const commentInterface = axios.create(
+    {
+        baseURL: 'http://localhost:7001/comment',
+        timeout: 10000,
+        withCredentials: true,
+    }
+);
 export const mock_projectInterface = axios.create(
     {
         baseURL: 'http://localhost:5173/project', 

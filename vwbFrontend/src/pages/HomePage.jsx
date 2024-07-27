@@ -6,23 +6,6 @@ export function HomePage() {
     
     const defaultTheme = createTheme();
 
-    // return (
-    //     <div>
-    //         <div>
-    //             <section>
-    //                 <div className="logoContainer">
-    //                     <img src={reactLogo} className="logo"/>
-    //                 </div>
-    //                 <h1>Welcome to WorkBoard!</h1>
-    //             </section>
-    //             <section>
-    //                 <HomeBoard />
-    //             </section>
-    //         </div>
-            
-    //         <ButtomBar location='home'/>
-    //     </div>
-    // );
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{

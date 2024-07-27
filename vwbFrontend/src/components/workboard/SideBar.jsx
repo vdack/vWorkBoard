@@ -33,29 +33,15 @@ export function SideBar(props) {
       setProjects(res.data);
     } catch(err) {
       console.log('Error when fetch projects:',err);
-      navigate('/unauthorized');
+    //   navigate('/unauthorized');
     }
     
   }
-  // const fetchUsers = async() => {
-  //   try{
-  //     if (!currentProject.selected) {
-  //       return;
-  //     }
-  //     const res = await getUsers(currentProject.id);
-  //     console.log('fetch users and get: ', res);
-  //     setUsers(res.data);
-  //   } catch(err) {
-  //     console.log('Error when fetch users:',err);
-  //     // navigate('/unauthorized');
-  //   }
-  // }
-
     const changeProject = async (id) => {
-        // console.log('current id:', id);
-        // console.log('current projects:', projects);
         const find = projects.find(p => p.pid === id);
-        
+        // const [toAddProject, setToAddProject] = useState(false);
+        // const [toAddUser, setToAddUser] = useState(false);
+
         const res = await getUsers(id);
         setCurrentProject({selected: true, id: find.id, name: find.name});
         setUsers(res.data);
@@ -96,17 +82,16 @@ export function SideBar(props) {
 
   useEffect(() => {
     fetchProjects();
-    // fetchUsers();
   }, []);
 
     return (
         <Drawer variant='permanent' open={true} 
             sx={{position: 'static',} }>
             <Box m={1.5}>
-                <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} />
+                <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} adder={ProjectAdder}/>
                 <Divider />
                 {currentProject.selected? 
-                    <Lister name={currentProject.name} itemList={users} mapFunction={createItem} />
+                    <Lister name={currentProject.name} itemList={users} mapFunction={createItem} adder={ProjectAdder}/>
                     : <ListItem><ListItemText primary='No Choosen Project' /></ListItem>
                 }
             </Box>
