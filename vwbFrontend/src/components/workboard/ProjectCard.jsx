@@ -17,8 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { TaskList } from './TaskList.jsx';
 import { AddCard } from '@mui/icons-material';
-import { getSubProjects, getTask } from '../../api/projectApi.jsx';
-
+import { getTasks } from '../../api/taskApi.jsx';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -42,7 +41,7 @@ export default function ProjectCard(props) {
 
   const project = props.project;
   const handleExpandClick = async() => {
-    const findres = await getTask(project.spid);
+    const findres = await getTasks(project.spid);
     console.log('by spid: ', project.spid, 'find tasks: ', findres);
     setTasks(findres.data);
     setExpanded(!expanded);

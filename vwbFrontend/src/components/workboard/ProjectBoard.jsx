@@ -2,7 +2,7 @@ import { Box, Fab } from "@mui/material";
 import ProjectCard from "./ProjectCard.jsx";
 import AddIcon from '@mui/icons-material/Add'; 
 // import { getSubProject } from "../../api/mock_projectApi.jsx";
-import { getSubProjects } from "../../api/projectApi.jsx";
+import { getSubProjects } from "../../api/subProjectApi.jsx"
 import { useEffect, useState } from "react";
 /**
  * 

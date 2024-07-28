@@ -19,19 +19,5 @@ export class ProjectController {
     const users = await this.projectService.getUsers(Number(pid));
     return {name: 'getUsers', code: '200', status: 200, data: users};
   }
-  @Get('/subProjects')
-  async getSubProjects (@Query('pid') pid) {
-    const subProjects = await this.projectService.getSubProjects(Number(pid));
-    return {name: 'getSubProjects', code: '200', status: 200, data: subProjects};
-  }
-  @Get('/tasks')
-  async getTasks (@Query('spid') spid) {
-    const tasks = await this.projectService.getTasks(Number(spid));
-    return {name: 'getTaks', code: '200', status: 200, data: tasks};
-  }
-  @Get('/comments')
-  async getComments (@Query('tid') tid) {
-    const comments = await this.projectService.getComments(Number(tid));
-    return {name: 'getComments', code: '200', status: 200, data: comments};
-  }
+
 };

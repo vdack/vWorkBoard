@@ -9,7 +9,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MessageIcon from '@mui/icons-material/Message';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CommentSheet } from '../common/CommentSheet';
-import { getComments } from '../../api/projectApi';
+import { getComments } from '../../api/commentApi';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
