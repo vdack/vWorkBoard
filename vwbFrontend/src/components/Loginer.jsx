@@ -2,7 +2,7 @@ import reactLogo from "../assets/react.svg";
 import "./Loginer.css";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { getUserByName, login} from "../api/userApi";
+import { login } from "../api/userApi";
 import { AccPswdInputer } from "./NewInput";
 import { Backdrop, Alert, Snackbar} from "@mui/material";
 export function Loginer () {

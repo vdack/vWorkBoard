@@ -1,9 +1,9 @@
 import {userInterface} from "./axiosConfig";
 
-export const getUserByName = async (userName) => {
-    const response = await userInterface.get('/user_name', {params:{name: userName}});
-    return response.data;
-} ;
+// export const getUserByName = async (userName) => {
+//     const response = await userInterface.get('/user_name', {params:{name: userName}});
+//     return response.data;
+// } ;
 
 export const register = async (user) => {
     const data = {name: user.name, password: user.password};
@@ -19,9 +19,9 @@ export const login = async (user) => {
     return response.data;
 };
 
-export const getToken = async (user) => {
-    const data = {name: user.name, password: user.password};
-    console.log('get Token with Data: ', data);
-    const response = await userInterface.post('/getToken', data);
-    return response.data;
-}
+// export const getToken = async (user) => {
+//     const data = {name: user.name, password: user.password};
+//     console.log('get Token with Data: ', data);
+//     const response = await userInterface.post('/getToken', data);
+//     return response.data;
+// }

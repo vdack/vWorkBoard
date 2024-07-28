@@ -8,10 +8,12 @@ import { Dialog, ListItemButton, ListItemIcon, ListItemText
     DialogContentText,
     TextField, Paper, IconButton,
     DialogActions,
-    Button
+    Button, 
  } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useCookies } from "react-cookie";
+import { createProject } from "../../api/projectApi.jsx";
+// import { useNavigate } from "react-router-dom";
 export const PopupTrigger = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [inputValue, setInputValue] = useState('');
@@ -41,19 +43,30 @@ export const PopupTrigger = () => {
     );
 };
 
-export const ProjectAdder = () => {
+/**
+ * 
+ * @param {Object} props
+ * @param {function} props.fetchProjects 
+ * @returns 
+ */
+export const ProjectAdder = (props) => {
     // TODO finished this adder
+    // const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [cookie] = useCookies(['id']);
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
-    }
+    };
     
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       const id = cookie['id'];
       const name = inputValue;
-      
+      const res = await createProject({uid: id, pname: name});
+      console.log('create a new project:', res);
+      setInputValue('');
+      setOpen(false);
+      props.fetchProjects();
     };
 
     return (
@@ -81,7 +94,7 @@ export const ProjectAdder = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={()=>{setOpen(false);setInputValue('');}}> Cancel</Button>
-                    <Button>Submit</Button>
+                    <Button onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </Fragment>

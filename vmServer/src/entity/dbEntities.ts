@@ -12,7 +12,7 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(() => TComment, tComment => tComment.user)
+  @OneToMany(() => TComment, tComment => tComment.user,  { cascade: true, onDelete: 'CASCADE' })
   comments: Comment[];
 };
 
@@ -37,7 +37,7 @@ export class Project {
   @Column()
   name: string;
 
-  @OneToMany(() => SubProject, subProject => subProject.project)
+  @OneToMany(() => SubProject, subProject => subProject.project,  { cascade: true, onDelete: 'CASCADE' })
   subProjects: SubProject[];
 }
 
@@ -62,7 +62,7 @@ export class SubProject {
   @Column()
   pid: number;
 
-  @OneToMany(() => SubTask, subTask => subTask.subProject)
+  @OneToMany(() => SubTask, subTask => subTask.subProject,  { cascade: true, onDelete: 'CASCADE' })
   subTasks: SubTask[];
 }
 @Entity('subTask')
@@ -89,7 +89,7 @@ export class SubTask {
   @Column()
   spid: number;
 
-  @OneToMany(() => TComment, tComment => tComment.subTask)
+  @OneToMany(() => TComment, tComment => tComment.subTask,  { cascade: true, onDelete: 'CASCADE' })
   comments: Comment[];
 
 

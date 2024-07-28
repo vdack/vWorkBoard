@@ -1,43 +1,38 @@
 import React, { useState } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box,Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
 
-export function Popup() {
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+/**
+ * 
+ * @param {Object} props 
+ * @param {string} props.name
+ * @param {boolean} props.open
+ * @param {string} props.inputValue
+ * @param {function} props.handleSubmit
+ * @param {function} props.handleClose
+ * @param {function} props.handleInputChange
+ * @returns 
+ */
+export function Popup(props) {
+  const old_name = props.name;
+  const [inputValue, setInputValue] = useState(old_name);
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
-  };
-
+  }
   const handleSubmit = () => {
-    console.log('输入的信息:', inputValue);
-    handleClose();
+    const new_name = inputValue;
+    props.handleSubmit(new_name);
+    setInputValue('');
   };
-
   return (
-    <Box sx={{ p: 2 }}>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        打开输入弹窗
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>输入信息</DialogTitle>
+      <Dialog open={props.open} onClose={props.handleClose} >
+        <DialogTitle>New Name of {old_name}</DialogTitle>
         <DialogContent>
-          <Typography>
-            ENter
-          </Typography>
+          <DialogContentText> Enter: </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="信息"
+            label="new_name"
             type="text"
             fullWidth
             variant="standard"
@@ -46,10 +41,9 @@ export function Popup() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>取消</Button>
-          <Button onClick={handleSubmit}>提交</Button>
+          <Button onClick={props.handleClose}>CANCEL</Button>
+          <Button onClick={handleSubmit}>SUBMIT</Button>
         </DialogActions>
       </Dialog>
-    </Box>
   );
 };

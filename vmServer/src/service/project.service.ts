@@ -55,5 +55,42 @@ export class ProjectService {
     }
   }
 
+  async createProject(uid: number, projectName: string) {
+    const project = new Project();
+    project.name = projectName;
+    const p = await this.projectModel.save(project);
+    console.log('create project: ', p);
+    const pjct_usr = new Project_User();
+    const date = new Date();
+    console.log('current date:', date);
+    pjct_usr.uid = uid;
+    pjct_usr.pid = p.pid;
+    pjct_usr.date = date;
+    const p_u = await this.project_userRelation.save(pjct_usr);
+    return {project: p, pjct_usr: p_u};
+  }
+
+  async deleteProject(pid: number) {
+    const del = await this.projectModel.delete({pid: pid});
+    console.log('by pid: ', pid, 'delete: ', del);
+    const quit = await this.project_userRelation.delete({pid: pid});
+    return {delInfo: del, quitInfo: quit};
+  }
+  async renameProject(pid: number, new_name: string) {
+    const res = await this.projectModel.update({pid: pid}, {name: new_name});
+    console.log('with pid: ', pid, 'renamed: ', new_name);
+    return res;
+  }
+  async quitProject(uid: number, pid: number) {
+    const res = await this.project_userRelation.delete({uid: uid, pid: pid});
+    const findres = await this.project_userRelation.findAndCount({where: {pid: pid}});
+    let removeProject = false;
+    let del = {};
+    if (findres[1] === 0) {
+      removeProject = true;
+      del = await this.projectModel.delete({pid: pid});
+    }
+    return {res, removeProject, del};
+  }
 };
 
