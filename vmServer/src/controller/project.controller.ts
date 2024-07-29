@@ -1,6 +1,7 @@
 import { Controller, Inject, Get, Query, Post, Body, Del, Patch} from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
 import { ProjectService } from "../service/project.service";
+import { httpError } from "@midwayjs/core";
 @Controller('/project')
 export class ProjectController {
   @Inject()
@@ -38,9 +39,20 @@ export class ProjectController {
   }
   @Del('/project_user')
   async quitProject(@Query('pid') pid: number, @Query('uid') uid: number) {
-
+    console.log(uid, 'quit', pid);
     const res = await this.projectService.quitProject(uid, pid);
     console.log('uid: ', uid, 'quit pid: ', pid);
     return {name: 'quitProject', code: '200', status: 200, data: res};
   }
+  @Post('/project_user')
+  async addUser(@Body('pid') pid: number, @Body('user_name') user_name: string) {
+    const res = await this.projectService.addUser(user_name, pid);
+    console.log(user_name, 'add ', pid, 'res: ', res);
+    if (res.find) {
+      return {name: 'addUser', code: '200', status: 200, data: res.data};
+    }
+    return new httpError.NotFoundError('Not Found User' + user_name);
+
+  }
+
 };

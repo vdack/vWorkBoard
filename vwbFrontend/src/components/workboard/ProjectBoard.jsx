@@ -1,9 +1,8 @@
 import { Box, Fab } from "@mui/material";
 import ProjectCard from "./ProjectCard.jsx";
-import AddIcon from '@mui/icons-material/Add'; 
-// import { getSubProject } from "../../api/mock_projectApi.jsx";
 import { getSubProjects } from "../../api/subProjectApi.jsx"
 import { useEffect, useState } from "react";
+import { SubProjectAdder } from "../common/PopupTrigger.jsx";
 /**
  * 
  * @param {Object} props
@@ -28,9 +27,8 @@ export function ProjectBoard(props) {
   };
 
   const displayCards = () => {
-    
     return (
-      subProjects.map((pjct) => {return<Box key={pjct.spid}> <ProjectCard project={pjct} /> </Box>; })
+      subProjects.map((pjct) => {return<Box key={pjct.spid}> <ProjectCard project={pjct} update={fetchSubProject} /> </Box>; })
     );
   }
   
@@ -41,16 +39,7 @@ export function ProjectBoard(props) {
   return (
     <Box sx={{mt: 20, ml: 30, display:'flex', flexDirection: 'row',flexWrap: 'wrap', gap: 2,}}>
       {displayCards()}
-      <Fab color="secondary"
-        sx={{
-            position: 'absolute',
-            
-            bottom: (theme) => theme.spacing(5),
-            right: (theme) => theme.spacing(3),
-        }}
-        >
-        <AddIcon /> 
-      </Fab>
+      <SubProjectAdder pid={props.pid} update={fetchSubProject}/>
     </Box>
   );
 }

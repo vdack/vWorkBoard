@@ -23,6 +23,14 @@ export const renameProject = async (pid, new_name) => {
   return res.data;
 };
 export const quitProject = async (uid, pid) => {
+  console.log(uid, ' quit ', pid);
   const res = await projectInterface.delete('/project_user', {params: {uid: uid, pid: pid}});
+  return res.data;
+};
+export const projectAddUser = async (user_name, pid) => {
+  
+  const data = {user_name: user_name, pid: pid};
+  const res = await projectInterface.post('/project_user', data);
+  console.log(user_name, 'add to', pid, 'res', res);
   return res.data;
 };

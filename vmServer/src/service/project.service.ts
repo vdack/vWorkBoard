@@ -82,6 +82,7 @@ export class ProjectService {
     return res;
   }
   async quitProject(uid: number, pid: number) {
+    console.log('uid:', uid, 'quit pid: ', pid);
     const res = await this.project_userRelation.delete({uid: uid, pid: pid});
     const findres = await this.project_userRelation.findAndCount({where: {pid: pid}});
     let removeProject = false;
@@ -91,6 +92,17 @@ export class ProjectService {
       del = await this.projectModel.delete({pid: pid});
     }
     return {res, removeProject, del};
+  }
+  async addUser (user_name: string, pid: number) {
+    console.log('user:', user_name, 'add to pid:', pid);
+
+    const find = await this.userModel.findOneBy({name: user_name});
+    if (find === null) {
+      return {find: false, data: {}};
+    }
+    const data = {uid: find.uid, pid: pid, date: Date()};
+    const res = await this.project_userRelation.save(data);
+    return {find: true, date: res};
   }
 };
 

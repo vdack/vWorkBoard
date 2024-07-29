@@ -59,7 +59,7 @@ export function BasicMenuTrigger(props) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        {props.itemList.map((Item, index) => {return <Item key={index}/>})}
+        {props.itemList.map((Item, index) => {return <Item key={index} onClick={handleClose}/>})}
       </Menu>
     </div>
   );

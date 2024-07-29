@@ -1,5 +1,4 @@
 import reactLogo from "../assets/react.svg";
-import "./Loginer.css";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { login } from "../api/userApi";
@@ -31,10 +30,10 @@ export function Loginer () {
             // alert('Password incorrect');
             setPswdError(true);
         } else if (res.status == 200) {
-            console.log('login sucessful');
-            setCookies('name', res.data.name, {path: '/', maxAge: 60*60, sameSite: 'none',});
-            setCookies('authToken', res.data.token, {path: '/', maxAge: 60*60, sameSite: 'none',});
-            setCookies('id', res.data.id, {path: '/', maxAge: 60*60, sameSite: 'none',});
+            const data = res.data;
+            setCookies('name', account, {path: '/', maxAge: 60*60, sameSite: 'none',});
+            setCookies('id', data.id, {path: '/', maxAge: 60*60, sameSite: 'none',});
+            setCookies('authToken', data.token, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('password', password, {path: '/', maxAge: 60*60, sameSite: 'none',});        
             setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });
         } else {

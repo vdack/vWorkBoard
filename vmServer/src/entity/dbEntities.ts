@@ -37,7 +37,7 @@ export class Project {
   @Column()
   name: string;
 
-  @OneToMany(() => SubProject, subProject => subProject.project,  { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => SubProject, subProject => subProject.project,  { cascade: true })
   subProjects: SubProject[];
 }
 
@@ -55,14 +55,14 @@ export class SubProject {
   @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   last_modified_date: Date;
 
-  @ManyToOne(() => Project, project => project.subProjects)
+  @ManyToOne(() => Project, project => project.subProjects, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'pid'})
   project: Project;
 
   @Column()
   pid: number;
 
-  @OneToMany(() => SubTask, subTask => subTask.subProject,  { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => SubTask, subTask => subTask.subProject,  { cascade: true,})
   subTasks: SubTask[];
 }
 @Entity('subTask')
@@ -82,14 +82,14 @@ export class SubTask {
   @Column({default: false})
   finished: boolean;
 
-  @ManyToOne(() => SubProject, subProject => subProject.subTasks)
+  @ManyToOne(() => SubProject, subProject => subProject.subTasks, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'spid'})
   subProject: SubProject;
 
   @Column()
   spid: number;
 
-  @OneToMany(() => TComment, tComment => tComment.subTask,  { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => TComment, tComment => tComment.subTask,  { cascade: true,})
   comments: Comment[];
 
 
@@ -106,14 +106,14 @@ export class TComment {
   @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   date: Date;
 
-  @ManyToOne(() => SubTask, subTask => subTask.comments)
+  @ManyToOne(() => SubTask, subTask => subTask.comments, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'tid'})
   subTask: SubTask;
 
   @Column()
   tid: number;
 
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(() => User, user => user.comments, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'uid'})
   user: User;
 

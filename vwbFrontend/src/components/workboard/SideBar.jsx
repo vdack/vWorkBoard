@@ -3,18 +3,17 @@ import { deleteProject, getProjects, getUsers, quitProject, renameProject } from
 import { useEffect, useState } from 'react';
 import { Lister } from '../common/Lister.jsx';
 import { useCookies } from 'react-cookie';
-import { ProjectAdder } from '../common/PopupTrigger.jsx';
+import { ProjectAdder, UserAdder } from '../common/PopupTrigger.jsx';
 import { Drawer, Divider, Toolbar, ListItemButton, ListItemText, List, ListSubheader, ListItemIcon,
   Typography, ListItem, Box,IconButton,
   MenuItem} from '@mui/material';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
-import PersonIcon from '@mui/icons-material/Person';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { BasicMenuTrigger, SingleItem} from '../common/menu.jsx';
-import { Popup } from '../common/Popup.jsx';
+import { SingleProjectItem, SingleUserItem } from './SideBarItems.jsx';
 /**
  * 
  * @param {Object} props
@@ -28,9 +27,6 @@ export function SideBar(props) {
   const[projects, setProjects] = useState([]);
   const[cookies, setCookies] = useCookies([]);
 
-  const [showPopup, setShowPopup] = useState(false);
-  // const [inputValue, setInputValue] = useState('');
-
   const fetchProjects = async() => {
     try {
       const res = await getProjects(cookies.id);
@@ -42,74 +38,49 @@ export function SideBar(props) {
     }
     
   }
-  const changeProject = async (id) => {
-    const find = projects.find(p => p.pid === id);
-    const res = await getUsers(id);
-    setCurrentProject({selected: true, id: find.id, name: find.name});
+
+  const fetchUsers = async (pid) => {
+    const res = await getUsers(pid);
     setUsers(res.data);
-    console.log('current users:', users);
+  };
+
+  const changeProject = async (id) => {
+    console.log('change Project with pid: ', id);
+    if (id === -1) {
+      setCurrentProject({selected:false, id: -1, name: ''});
+      props.setPid(-1);
+      return;
+    }
+    const find = projects.find(p => p.pid === id);
+    fetchUsers(id);
+    setCurrentProject({selected: true, id: id, name: find.name});
     props.setPid(id);
   };
 
-
-  const pjctAdder = () => {
-    return (<ProjectAdder fetchProjects={fetchProjects} />);
+  const update = () => {
+    fetchProjects();
+    fetchUsers(currentProject.id);
   }
-
+  const pjctAdder = () => {
+    return (<ProjectAdder update={fetchProjects} />);
+  }
   const createProjectItem = (item) => {
-    
-
-    const handleClosePopup = () => {
-      setShowPopup(false);
-    };
-
-    const handleSubmit = async (new_name) => {
-      const res = await renameProject(item.pid, new_name);
-      console.log('handleSubmit rename: ', res);
-      await fetchProjects();
-      setShowPopup(false);
-    };
-    
-    const RenameItem = (props) => {
-      return (<>
-      <SingleItem icon={EditIcon} text='Rename' onClick={()=>{setShowPopup(true);}}/>
-      <Popup
-            open={showPopup} 
-            handleClose={handleClosePopup} 
-            name={item.name}
-            handleSubmit={handleSubmit}
-            />
-      </> );
-    };
-    const DeleteItem = (props) => {
-      return (<SingleItem icon={DeleteIcon} text='Delete' onClick={async ()=>{await deleteProject(item.pid);fetchProjects();}}/>);
-    };
-    const QuitItem = (props) => {
-      return (<SingleItem icon={ExitToAppIcon} text='Quit' onClick={async ()=>{await quitProject(cookies.id, item.pid); fetchProjects();}}/>);
-    };
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} key={item.pid}>
-        <ListItemButton  onClick={async() => {await changeProject(item.pid);}} >
-          <ListItemIcon> <SpaceDashboardIcon /> </ListItemIcon>
-          <ListItemText primary={item.name} />
-        </ListItemButton>
-        <Box>
-          
-        </Box>
-        <BasicMenuTrigger displayIcon={MoreVertIcon} itemList={[RenameItem, DeleteItem, QuitItem]} />
-      </Box>
-    );
+    <SingleProjectItem 
+      key={item.pid} 
+      item={item} 
+      update={update} 
+      changeProject={changeProject} 
+      currentPid={currentProject.id}
+    />);
   }
   
-
+  const usrAdder = () => {
+    return (<UserAdder update={update} pid={currentProject.id}/>);
+  };
   const createItem = (item) => {
-    return (
-      <ListItem key={item.uid}>
-        <ListItemIcon> <PersonIcon /> </ListItemIcon>
-        <ListItemText primary={item.name} />
-        <IconButton> <MoreVertIcon /> </IconButton>
-      </ListItem>
-    );
+    console.log('user item current project: ', currentProject);
+    return <SingleUserItem key={item.uid} item={item} update={update} pid={currentProject.id}/>
   };
 
   useEffect(() => {
@@ -119,11 +90,11 @@ export function SideBar(props) {
   return (
     <Drawer variant='permanent' open={true} 
       sx={{position: 'static',} }>
-      <Box m={1.5}>
+      <Box m={1.5} maxWidth={200}>
         <Lister name='Projects' itemList={projects} mapFunction={createProjectItem} adder={pjctAdder}/>
         <Divider />
         {currentProject.selected? 
-          <Lister name={currentProject.name} itemList={users} mapFunction={createItem} adder={ProjectAdder}/>
+          <Lister name={currentProject.name} itemList={users} mapFunction={createItem} adder={usrAdder}/>
           : <ListItem><ListItemText primary='No Choosen Project' /></ListItem>
         }
       </Box>
