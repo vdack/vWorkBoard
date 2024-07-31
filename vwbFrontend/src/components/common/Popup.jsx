@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box,Paper, Button, Dialog, DialogActions, DialogContent, 
   DialogContentText, DialogTitle, TextField, 
   Typography, ListItem, ListItemText, List } from '@mui/material';
@@ -6,12 +6,7 @@ import { editSubProject } from '../../api/subProjectApi';
 import { editTask } from '../../api/taskApi';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
-
-
-
-
-
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 /**
  * 
  * @param {Object} props 
@@ -225,42 +220,78 @@ const VisuallyHiddenInput = styled('input')({
 export const FilePupop = (props) => {
   const [file, setFile] = useState(null);
   const [ws, setWs] = useState(null);
-  const socket = new WebSocket('ws://localhost:7002');
+  const [files, setFiles] = useState([]);
   const open = props.open;
 
-  socket.onopen = () => {
-    console.log('ws connection established.');
-    setWs(socket);
-    socket.send(JSON.stringify({ type: 'listFiles' }));
-  }
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (data.type === 'upload') {
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:7002');
 
-    }
-  };
+    socket.onopen = () => {
+      console.log('ws connection established.');
+      setWs(socket);
+      socket.send(JSON.stringify({ type: 'listFiles' }));
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'upload') {
+        console.log('File uploaded successfully');
+        // Refresh the file list
+        socket.send(JSON.stringify({ type: 'listFiles' }));
+      } else if (data.type === 'listFiles') {
+        setFiles(data.files);
+      }
+    };
+
+    socket.onclose = () => {
+      console.log('ws connection closed.');
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
   const handleClose = () => {
     props.handleClose();
   };
+
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    setTimeout(() => {console.log(file);}, 500);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile && ws) {
+      console.log('upload a file: ', selectedFile);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileData = e.target.result;
+        ws.send(JSON.stringify({ type: 'upload', fileName: selectedFile.name, fileData }));
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleDownload = (fileName) => {
+    if (ws) {
+      ws.send(JSON.stringify({ type: 'download', fileName }));
+    }
   };
 
   const FileItem = (props) => {
     return (
-    <ListItem>
-      <ListItemText>
-        {props.text}
-      </ListItemText>
-    </ListItem>);
+      <ListItem>
+        <ListItemText primary={props.text} />
+        <IconButton onClick={() => handleDownload(props.text)}>
+          <CloudDownloadIcon />
+        </IconButton>
+      </ListItem>
+    );
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <Box m={3} width={500} minHeight={500}>
-        <List >
-          
+        <List>
           <ListItem>
             <ListItemText primary='ALL FILES:' />
             <Button
@@ -270,12 +301,12 @@ export const FilePupop = (props) => {
               startIcon={<CloudUploadIcon />}
             >
               Upload file
-              <VisuallyHiddenInput type="file" onChange={handleFileChange}/>
+              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
           </ListItem>
-          {['123', 'abc', 'aaa'].map((item, index) => <FileItem key={index} text={item} />)}
+          {files.map((item, index) => <FileItem key={index} text={item} />)}
         </List>
       </Box>
     </Dialog>
   );
-}
+};

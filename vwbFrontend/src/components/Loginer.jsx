@@ -36,7 +36,8 @@ export function Loginer () {
             setCookies('authToken', data.token, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('password', password, {path: '/', maxAge: 60*60, sameSite: 'none',});    
             setTimeout(
-                () => {console.log('login sucessfully'); 
+                async () => {console.log('login sucessfully'); 
+                alert('login sucessfully');
                 setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });}, 
                 500);    
             

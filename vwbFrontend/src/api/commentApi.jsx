@@ -6,7 +6,7 @@ export const getComments = async (tid) => {
 } ;
 
 export const createComment = async (tid, uid, content) => {
-  const data = {tid: tid, uid: uid, content, content};
+  const data = {tid: tid, uid: uid, content: content};
   const res = await commentInterface.post('/comments', data);
   return res.data;
 };
