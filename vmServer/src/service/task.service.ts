@@ -25,4 +25,21 @@ export class TaskService {
       throw err;
     }
   }
+  async editTask(tid: number, header: string, content: string, finished: boolean): Promise<any> {
+    try {
+      const data = {header: header, content: content, finished: finished};
+      const res = this.taskModel.update({tid: tid}, data);
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  };
+  async deleteTask(tid: number): Promise<any> {
+    try {
+      const res = this.taskModel.delete({tid: tid});
+      return res;
+    } catch (err) {
+      throw (err);
+    }
+  };
 }

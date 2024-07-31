@@ -11,13 +11,18 @@ import { SingleTask } from './SingleTask.jsx';
  * 
  * @param {Object} props
  * @param {[]} props.tasks 
+ * @param {function} props.update
  * @returns 
  */
 export function TaskList(props) {
   // console.log('task list get tasks:', props.tasks);
-  const displayTask = () => {
-    return props.tasks.map((task) => {return <Box key={task.tid}><SingleTask task={task} /></Box>});
+  const update = () => {
+    props.update();
   }
+  const displayTask = () => {
+    return props.tasks.map((task) => {return <Box key={task.tid}><SingleTask task={task} update={update}/></Box>});
+  }
+  
 
     return (
         <List subheader={

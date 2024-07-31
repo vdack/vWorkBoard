@@ -34,8 +34,12 @@ export function Loginer () {
             setCookies('name', account, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('id', data.id, {path: '/', maxAge: 60*60, sameSite: 'none',});
             setCookies('authToken', data.token, {path: '/', maxAge: 60*60, sameSite: 'none',});
-            setCookies('password', password, {path: '/', maxAge: 60*60, sameSite: 'none',});        
-            setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });
+            setCookies('password', password, {path: '/', maxAge: 60*60, sameSite: 'none',});    
+            setTimeout(
+                () => {console.log('login sucessfully'); 
+                setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });}, 
+                500);    
+            
         } else {
             console.log('Unkown Error!');
         }

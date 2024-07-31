@@ -102,7 +102,7 @@ export default function ProjectCard(props) {
         subheader={project.last_modified_date}
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography maxWidth={300} variant="body2" color="text.secondary"  >
           {project.discription}
         </Typography>
       </CardContent>
@@ -120,7 +120,7 @@ export default function ProjectCard(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit >
         <CardContent >
           
-          <TaskList tasks={tasks}/>
+          <TaskList tasks={tasks} update={fetchTasks}/>
 
         </CardContent>
       </Collapse>

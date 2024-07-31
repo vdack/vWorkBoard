@@ -93,7 +93,7 @@ export class ProjectService {
     }
     return {res, removeProject, del};
   }
-  async addUser (user_name: string, pid: number) {
+  async addUser (user_name: string, pid: number): Promise<any>{
     console.log('user:', user_name, 'add to pid:', pid);
 
     const find = await this.userModel.findOneBy({name: user_name});

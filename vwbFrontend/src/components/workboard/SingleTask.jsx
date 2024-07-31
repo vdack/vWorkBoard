@@ -10,6 +10,8 @@ import MessageIcon from '@mui/icons-material/Message';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CommentSheet } from '../common/CommentSheet';
 import { getComments } from '../../api/commentApi';
+import { deleteTask, editTask } from '../../api/taskApi';
+import { FilePupop, TaskEditPopup } from '../common/Popup';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -34,25 +36,45 @@ const ExpandMore = styled((props) => {
  */
 export function SingleTask(props) {
   const task = props.task;
-
+  const update = props.update;
   const [expanded, setExpanded] = React.useState(false);
-  const [finished, setFinished] = React.useState(task.finished);
   const [comments, setComments] = React.useState([]);
-  const handleExpandClick = async () => {
+  const [openPop, setOpenPop] = React.useState(false);
+  const [openFile, setOpenFile] = React.useState(false);
+
+  const fetchComments = async () => {
     const res = await getComments(task.tid);
     console.log('by tid: ', task.tid, 'get comments: ', res);
     setComments(res.data);
+  }
+  const handleExpandClick = async () => {
+    await fetchComments(); 
     setExpanded(!expanded);
   };
-  const handleFinish = () => {
-    setFinished(!finished);
-    console.log('finished changed.');
-
-    // TODO --------------------------------
-    // TODO |POST THE STATUS TO THE SERVER.|
-    // TODO --------------------------------
-
+  const handleFinish = async () => {
+    const res = await editTask(task.tid, task.header, task.content, !task.finished);
+    console.log('finished changed. res:', res);
+    update();
   };
+  const handleDel = async () => {
+    const res = await deleteTask(task.tid);
+    console.log('delete task:', res);
+    update();
+  }
+  const handleEdit = () => {
+    setOpenPop(true);
+  }
+  const handlePopClose = () => {
+    console.log('close pop');
+    setOpenPop(false);
+  };
+
+  const handleFile = () => {
+    setOpenFile(true);
+  }
+  const handleFileClose = () => {
+    setOpenFile(false);
+  }
 
   return (
     <React.Fragment>
@@ -65,7 +87,7 @@ export function SingleTask(props) {
           cursor: 'pointer',
           borderColor: 'lightblue'
         }}}>
-        <Box m={2} >
+        <Box maxWidth={240} m={2} >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <ListItemText primary={task.header} />
                   <Typography variant="body2" color="textSecondary">
@@ -84,16 +106,18 @@ export function SingleTask(props) {
           aria-label="show more">
             <ExpandMoreIcon />
           </ExpandMore>
-          <IconButton sx={{mr: 4,}}><MessageIcon /></IconButton>
-          <IconButton><InsertDriveFileIcon/></IconButton>
-          <IconButton><DeleteIcon/></IconButton>
-          <IconButton><EditIcon/></IconButton>
-          <Checkbox checked={finished} onChange={handleFinish}/>
+          <Typography variant='body2' mt={1.5} mr={1}>comments</Typography>
+          {/* <Divider  variant='inset' /> */}
+          <IconButton onClick={handleFile}><InsertDriveFileIcon/></IconButton>
+          <IconButton onClick={handleDel}><DeleteIcon/></IconButton>
+          <IconButton onClick={handleEdit}><EditIcon/></IconButton>
+          <Checkbox checked={task.finished} onChange={handleFinish}/>
         </Box>
-        
+        <FilePupop open={openFile} handleClose={handleFileClose} />
+        <TaskEditPopup task={task} open={openPop} handleClose={handlePopClose} update={update} />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Divider />
-          <CommentSheet comments={comments}/>
+          <CommentSheet comments={comments} tid={task.tid} update={fetchComments}/>
         </Collapse>
       </Paper>
     </ListItem>

@@ -238,9 +238,11 @@ export const TaskAdder = (props) => {
     setAnchorEl(null);
   };
   const handleContentChange = (event) => {
+    // event.preventDefault();
     setContent(event.target.value);
   };
   const handleHeaderChange = (event) => {
+    // event.preventDefault();
     setHeader(event.target.value);
   };
   const handleSubmit = async () => {
@@ -260,9 +262,8 @@ export const TaskAdder = (props) => {
       <IconButton onClick={handleClick}>
         <AddCardIcon />
       </IconButton>
-      <Menu 
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
+      <Menu
+        variant="menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -274,17 +275,15 @@ export const TaskAdder = (props) => {
           vertical: 'top',
           horizontal: 'left',
         }}
+
       >
         <Box m={2} width={250}>
-          <Typography variant="info">Task Information Below:</Typography>
+          <Typography >Task Information Below:</Typography>
           <Box mb={1}>
             <TextField
-              autoFocus
               fullWidth
               margin='normal'
-              id="header"
               label="Header"
-              type="text"
               variant='filled'
               value={header}
               onChange={handleHeaderChange}
@@ -294,9 +293,7 @@ export const TaskAdder = (props) => {
             <TextField
               fullWidth
               margin='normal'
-              id="context"
               label="Context"
-              type="text"
               variant='filled'
               value={content}
               onChange={handleContentChange}

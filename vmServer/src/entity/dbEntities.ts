@@ -90,8 +90,10 @@ export class SubTask {
   spid: number;
 
   @OneToMany(() => TComment, tComment => tComment.subTask,  { cascade: true,})
-  comments: Comment[];
+  comments: TComment[];
 
+  @OneToMany(() => TFile, tFile => tFile.subTask,  { cascade: true,})
+  files: TFile[];
 
 }
 
@@ -120,3 +122,24 @@ export class TComment {
   @Column()
   uid: number;
 }
+@Entity('file')
+export class TFile {
+  @PrimaryGeneratedColumn()
+  fid: number;
+
+  @ManyToOne(() => SubTask, subTask => subTask.files, {onDelete: 'SET NULL'})
+  @JoinColumn({name: 'tid'})
+  subTask: SubTask;
+
+  @Column({nullable: true})
+  tid: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  path: string;
+
+  @Column()
+  date: Date;
+};
