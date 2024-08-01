@@ -14,6 +14,9 @@ export class User {
 
   @OneToMany(() => TComment, tComment => tComment.user,  { cascade: true, onDelete: 'CASCADE' })
   comments: Comment[];
+
+  @OneToMany(() => Notification, notification => notification.user,  { cascade: true, onDelete: 'CASCADE' })
+  notifications: Notification[];
 };
 
 @Entity('token')
@@ -39,6 +42,9 @@ export class Project {
 
   @OneToMany(() => SubProject, subProject => subProject.project,  { cascade: true })
   subProjects: SubProject[];
+
+  @OneToMany(() => Notification, notification => notification.project,  { cascade: true, onDelete: 'CASCADE' })
+  notifications: Notification[];
 }
 
 @Entity('subProject')
@@ -143,3 +149,32 @@ export class TFile {
   @Column()
   date: Date;
 };
+
+@Entity('notification')
+export class Notification {
+  @PrimaryGeneratedColumn()
+  nid: number
+
+  @ManyToOne(() => User, user => user.notifications, {onDelete: 'CASCADE'})
+  @JoinColumn({name: 'uid'})
+  user: User;
+
+  @Column()
+  uid: number;
+
+  @ManyToOne(() => Project, project => project.notifications, {onDelete: 'CASCADE'})
+  @JoinColumn({name: 'pid'})
+  project: Project;
+
+  @Column()
+  pid: number;
+
+  @Column({default: false})
+  read: boolean;
+
+  @Column()
+  action: string;
+
+  @Column()
+  date: Date;
+}

@@ -1,7 +1,9 @@
+import { UserService } from './../service/user.service';
 import { Controller, Inject, Get, Query, Post, Body, Del, Patch} from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
 import { ProjectService } from "../service/project.service";
 import { httpError } from "@midwayjs/core";
+import { NotificationService } from "../service/notification.service";
 @Controller('/project')
 export class ProjectController {
   @Inject()
@@ -9,6 +11,12 @@ export class ProjectController {
 
   @Inject()
   projectService: ProjectService;
+
+  @Inject()
+  notificationService: NotificationService;
+
+  @Inject()
+  userService: UserService;
 
   @Get('/projects')
   async getProjects(@Query('uid') uid: number) {
@@ -34,15 +42,26 @@ export class ProjectController {
   }
   @Patch('/projects')
   async renameProject(@Body('pid')pid: number, @Body('new_name') new_name: string) {
-    const res = await this.projectService.renameProject(pid, new_name);
-    return {name: 'renameProjects', code: '200', status: 200, data: res};
+    try {
+      const res = await this.projectService.renameProject(pid, new_name);
+      return {name: 'renameProjects', code: '200', status: 200, data: res};
+    } catch (err) {
+      return new httpError.RequestTimeoutError('Unknown Error!');
+    }
   }
   @Del('/project_user')
   async quitProject(@Query('pid') pid: number, @Query('uid') uid: number) {
-    console.log(uid, 'quit', pid);
-    const res = await this.projectService.quitProject(uid, pid);
-    console.log('uid: ', uid, 'quit pid: ', pid);
-    return {name: 'quitProject', code: '200', status: 200, data: res};
+    try {
+      const p_res = this.projectService.quitProject(uid, pid);
+      const p_user = this.userService.getUserById(uid);
+      const p_project = this.projectService.getProjectByPid(pid);
+      const [res, user, project] = await Promise.all([p_res, p_user, p_project]);
+      await this.notificationService.addNotifications(uid, pid, user.name + ' quit ' + project.name);
+      return {name: 'quitProject', code: '200', status: 200, data: res};
+    } catch (err) {
+      return new httpError.RequestTimeoutError('Unknown Error!');
+    }
+
   }
   @Post('/project_user')
   async addUser(@Body('pid') pid: number, @Body('user_name') user_name: string) {

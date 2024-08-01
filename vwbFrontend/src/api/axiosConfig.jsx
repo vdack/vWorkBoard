@@ -54,3 +54,10 @@ export const fileInterface = axios.create(
         withCredentials: true,
     }
 );
+export const notificationInterface = axios.create(
+    {
+        baseURL: 'http://localhost:7001/notification',
+        timeout: 10000,
+        withCredentials: true,
+    }
+);

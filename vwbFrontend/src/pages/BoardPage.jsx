@@ -16,13 +16,14 @@ export function BoardPage(props) {
 
     const [pid, setPid] = useState(undefined);
 
-    const uid = cookies['id'];
+    const uid = cookies.id;
+    const name = cookies.name;
     console.log('board current user id: ', uid);
 
     return (
             <Box display={"flex"}  sx={{ml:0, backgroundColor: 'rgb(213, 228, 241)',
                  minHeight:'100vh',height: '100%', minWidth:'100vw', width:'100%'}}>
-            <TopBar />
+            <TopBar name={name} uid={uid}/>
             <SideBar setPid={setPid}/>
             {/* <Dashboard /> */}
             <CssBaseline />

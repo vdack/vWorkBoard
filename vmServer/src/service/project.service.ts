@@ -104,5 +104,18 @@ export class ProjectService {
     const res = await this.project_userRelation.save(data);
     return {find: true, date: res};
   }
+
+  async getProjectByPid(pid: number) {
+    try {
+      const res = await this.projectModel.findOneBy({pid: pid});
+      if (!res) {
+        return {found: false};
+      } else {
+        return {found: true, pid: res.pid, name: res.name};
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
 };
 

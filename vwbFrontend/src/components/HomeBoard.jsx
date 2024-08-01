@@ -17,7 +17,7 @@ export function HomeBoard() {
     const MainBoard = () => {
       const authorized = cookies.authorized;
       const name = cookies.name;
-      if (name === undefined) {
+      if (authorized && name === undefined) {
         window.location.reload();
       }
       if (authorized) {
