@@ -37,6 +37,11 @@ export default {
     secret: 'vdack-common-test',
     expiresIn: 60*60,
   },
+  upload: {
+    uploadDirectory: 'uploads',
+    whitelist: null,
+  },
 } as MidwayConfig;
+
 
 

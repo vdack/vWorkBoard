@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box,Paper, Button, Dialog, DialogActions, DialogContent, 
   DialogContentText, DialogTitle, TextField, 
   Typography, ListItem, ListItemText, List } from '@mui/material';
+import axios from 'axios';
 import { editSubProject } from '../../api/subProjectApi';
 import { editTask } from '../../api/taskApi';
 import { styled } from '@mui/material/styles';
@@ -215,66 +216,50 @@ const VisuallyHiddenInput = styled('input')({
  * @param {boolean} props.open
  * @param {function} props.handleClose 
  * @param {function} props.update 
+ * @param {number} props.tid
  * @returns 
  */
 export const FilePupop = (props) => {
   const [file, setFile] = useState(null);
-  const [ws, setWs] = useState(null);
   const [files, setFiles] = useState([]);
   const open = props.open;
+  const tid = props.tid;
 
-  useEffect(() => {
-    const socket = new WebSocket('ws://localhost:7002');
-
-    socket.onopen = () => {
-      console.log('ws connection established.');
-      setWs(socket);
-      socket.send(JSON.stringify({ type: 'listFiles' }));
-    };
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'upload') {
-        console.log('File uploaded successfully');
-        // Refresh the file list
-        socket.send(JSON.stringify({ type: 'listFiles' }));
-      } else if (data.type === 'listFiles') {
-        setFiles(data.files);
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('tid', tid);
+      // formData.append('name', file.name);
+      try {
+        const response = await axios.post('http://localhost:7001/file', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('File uploaded successfully', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
       }
-    };
-
-    socket.onclose = () => {
-      console.log('ws connection closed.');
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
+    }
+  };
 
   const handleClose = () => {
     props.handleClose();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-
-    if (selectedFile && ws) {
-      console.log('upload a file: ', selectedFile);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const fileData = e.target.result;
-        ws.send(JSON.stringify({ type: 'upload', fileName: selectedFile.name, fileData }));
-      };
-      reader.readAsDataURL(selectedFile);
-    }
+    // await handleUpload();
   };
 
   const handleDownload = (fileName) => {
-    if (ws) {
-      ws.send(JSON.stringify({ type: 'download', fileName }));
-    }
+    //todo
   };
 
   const FileItem = (props) => {
@@ -294,7 +279,7 @@ export const FilePupop = (props) => {
         <List>
           <ListItem>
             <ListItemText primary='ALL FILES:' />
-            <Button
+            {/* <Button
               component="label"
               variant="outlined"
               tabIndex={-1}
@@ -302,7 +287,9 @@ export const FilePupop = (props) => {
             >
               Upload file
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
-            </Button>
+            </Button> */}
+            <input type="file" onChange={handleFileChange} />
+            <button onClick={handleUpload}>Upload</button>
           </ListItem>
           {files.map((item, index) => <FileItem key={index} text={item} />)}
         </List>

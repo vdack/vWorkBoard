@@ -4,8 +4,10 @@ import { useCookies } from "react-cookie";
 import { login } from "../api/userApi";
 import { AccPswdInputer } from "./NewInput";
 import { Backdrop, Alert, Snackbar} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 export function Loginer () {
     const [cookies, setCookies] = useCookies(['authorized', 'authToken', 'name', 'id', 'password']);
+    const navigate = useNavigate();
     
     const [pswdError, setPswdError] = useState(false);
     const [accountError, setAccountError] = useState(false);
@@ -38,7 +40,9 @@ export function Loginer () {
             setTimeout(
                 async () => {console.log('login sucessfully'); 
                 alert('login sucessfully');
-                setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });}, 
+                setCookies('authorized', true, {path: '/', maxAge: 60*60, sameSite: 'none', });
+                navigate('/home');}, 
+                
                 500);    
             
         } else {

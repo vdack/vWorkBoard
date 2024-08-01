@@ -47,3 +47,10 @@ export const mock_projectInterface = axios.create(
         timeout: 10000
     }
 );
+export const fileInterface = axios.create(
+    {
+        baseURL: 'http://localhost:7001/file',
+        timeout: 10000,
+        withCredentials: true,
+    }
+);

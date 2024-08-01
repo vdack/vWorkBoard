@@ -6,6 +6,7 @@ import { join } from 'path';
 import * as orm from '@midwayjs/typeorm';
 import * as jwt from '@midwayjs/jwt';
 import * as ws from '@midwayjs/ws';
+import * as upload from '@midwayjs/upload';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
@@ -25,6 +26,7 @@ import * as crossDomain from '@midwayjs/cross-domain';
     orm,
     jwt,
     ws,
+    upload,
   ],
   importConfigs: [join(__dirname, './config')],
 })

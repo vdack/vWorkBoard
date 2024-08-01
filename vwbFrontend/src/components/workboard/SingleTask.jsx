@@ -113,7 +113,7 @@ export function SingleTask(props) {
           <IconButton onClick={handleEdit}><EditIcon/></IconButton>
           <Checkbox checked={task.finished} onChange={handleFinish}/>
         </Box>
-        <FilePupop open={openFile} handleClose={handleFileClose} />
+        <FilePupop open={openFile} handleClose={handleFileClose} tid={task.tid}/>
         <TaskEditPopup task={task} open={openPop} handleClose={handlePopClose} update={update} />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Divider />
