@@ -49,8 +49,7 @@ export class AuthorizeMiddleware implements IMiddleware<Context, NextFunction>{
 
   ignore(ctx:Context):boolean {
     return ctx.path === '/user/register'
-      || ctx.path === '/user/login'
-      || ctx.path === '/file';
+      || ctx.path === '/user/login';
   }
 
   static getName():string {

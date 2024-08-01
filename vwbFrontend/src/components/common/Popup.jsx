@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Box,Paper, Button, Dialog, DialogActions, DialogContent, 
   DialogContentText, DialogTitle, TextField, 
-  Typography, ListItem, ListItemText, List } from '@mui/material';
+  Typography, ListItem, ListItemText, List, IconButton, 
+  Divider} from '@mui/material';
 import axios from 'axios';
 import { editSubProject } from '../../api/subProjectApi';
 import { editTask } from '../../api/taskApi';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { delFile, downloadFile, getFiles, uploadFile } from '../../api/fileApi';
 /**
  * 
  * @param {Object} props 
@@ -221,27 +224,23 @@ const VisuallyHiddenInput = styled('input')({
  */
 export const FilePupop = (props) => {
   const [file, setFile] = useState(null);
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
   const open = props.open;
   const tid = props.tid;
+  const files = props.files;
+  const update = props.update;
 
-  const handleUpload = async () => {
+  const handleUpload = async (event) => {
+    const file = event.target.files[0];
     if (!file) {
       alert("Please select a file first!");
       return;
     }
     if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('tid', tid);
-      // formData.append('name', file.name);
       try {
-        const response = await axios.post('http://localhost:7001/file', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log('File uploaded successfully', response.data);
+        const res = await uploadFile(file, tid);
+        update();
+        console.log('File uploaded successfully', res);
       } catch (error) {
         console.error('Error uploading file:', error);
       }
@@ -251,22 +250,38 @@ export const FilePupop = (props) => {
   const handleClose = () => {
     props.handleClose();
   };
+  
+  const handleDel = async(fid) => {
+    const res = await delFile(fid);
+    update();
+  }
 
-  const handleFileChange = async (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    // await handleUpload();
-  };
-
-  const handleDownload = (fileName) => {
-    //todo
+  const handleDownload = async (fid) => {
+    const fileData = await downloadFile(fid);
+    console.log('get file data:', fileData);
+    
+    const {name, data} = fileData;
+    const uint8Array = new Uint8Array(data.data);
+    const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name; 
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const FileItem = (props) => {
+    const item = props.item;
     return (
       <ListItem>
-        <ListItemText primary={props.text} />
-        <IconButton onClick={() => handleDownload(props.text)}>
+        <ListItemText primary={item.name} />
+        <IconButton onClick={() => {handleDel(item.fid);}}>
+          <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={() => {handleDownload(item.fid);}}>
           <CloudDownloadIcon />
         </IconButton>
       </ListItem>
@@ -279,19 +294,18 @@ export const FilePupop = (props) => {
         <List>
           <ListItem>
             <ListItemText primary='ALL FILES:' />
-            {/* <Button
+            <Button
               component="label"
               variant="outlined"
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
             >
               Upload file
-              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
-            </Button> */}
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleUpload}>Upload</button>
+              <VisuallyHiddenInput type="file" onChange={handleUpload} />
+            </Button>
           </ListItem>
-          {files.map((item, index) => <FileItem key={index} text={item} />)}
+          <Divider />
+          {files.map((item, index) => {return <FileItem key={index} item={item} />; })}
         </List>
       </Box>
     </Dialog>

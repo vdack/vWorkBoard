@@ -14,40 +14,43 @@ export function HomeBoard() {
         removeCookies('password', {path: '/', sameSite: 'none', });
         removeCookies('id', {path: '/', sameSite: 'none', });
     }
-    const unauthorizedBoard = (
-        <Box sx={{my:4, textAlign: "center"}}>
+    const MainBoard = () => {
+      const authorized = cookies.authorized;
+      const name = cookies.name;
+      if (name === undefined) {
+        window.location.reload();
+      }
+      if (authorized) {
+        return (
+        <Box sx={{my:4, textAlign: "center",}}>
+          <Typography variant="caption" fontSize={20} component="div" > Hello, {name} ! </Typography>
+          <Box display={"flex"}>
+            <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}}
+              onClick={() => {cookies.authorized? navigate('/board'): navigate('/');}}>
+              WorkBoard
+            </Button>
+            <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+            <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}} onClick={logout}> Log Out </Button>
+          </Box>
+        </Box>
+      );
+      } else {
+        return (
+          <Box sx={{my:4, textAlign: "center"}}>
             <Typography variant="caption" fontSize={20} component="div" >
-                Haven't logged yet.
+              Haven't logged yet.
             </Typography>
             <Typography variant="caption" fontSize={20}  component="div" gutterBottom>
-                Click Button Below to Login or Register.
+              Click Button Below to Login or Register.
             </Typography>
             <PanToolAltIcon sx={{transform:'rotate(180deg)', fontSize:30, }} />
-        </Box>
-    
-    );
-    const authorizedBoard = (
-        <Box sx={{my:4, textAlign: "center",}}>
-            <Typography variant="caption" fontSize={20} component="div" >
-                Hello, {cookies.name} !
-            </Typography>
-            <Box display={"flex"}>
-                <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}}
-                    onClick={() => {cookies.authorized? navigate('/board'): navigate('/');}}>
-                    WorkBoard
-                </Button>
-                <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-                <Button variant="contained" sx={{minWidth:160, ml:2, mr:2}} onClick={logout}>
-                    Log Out
-                </Button>
-            </Box>
-        </Box>
-    );
-
-
+          </Box>
+      );
+      }
+    };
     return (
         <div className="HomeBoard-container">
-            {cookies.authorized? authorizedBoard : unauthorizedBoard}
+            <MainBoard />
         </div>
     );
 };

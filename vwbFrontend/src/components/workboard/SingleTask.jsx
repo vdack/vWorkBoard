@@ -12,6 +12,7 @@ import { CommentSheet } from '../common/CommentSheet';
 import { getComments } from '../../api/commentApi';
 import { deleteTask, editTask } from '../../api/taskApi';
 import { FilePupop, TaskEditPopup } from '../common/Popup';
+import { getFiles } from '../../api/fileApi';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -41,7 +42,12 @@ export function SingleTask(props) {
   const [comments, setComments] = React.useState([]);
   const [openPop, setOpenPop] = React.useState(false);
   const [openFile, setOpenFile] = React.useState(false);
+  const [files, setFiles] = React.useState([]);
 
+  const fetchFiles = async () => {
+    const res = await getFiles(task.tid);
+    setFiles(res);
+  }
   const fetchComments = async () => {
     const res = await getComments(task.tid);
     console.log('by tid: ', task.tid, 'get comments: ', res);
@@ -69,7 +75,8 @@ export function SingleTask(props) {
     setOpenPop(false);
   };
 
-  const handleFile = () => {
+  const handleFile = async () => {
+    await fetchFiles();
     setOpenFile(true);
   }
   const handleFileClose = () => {
@@ -113,7 +120,7 @@ export function SingleTask(props) {
           <IconButton onClick={handleEdit}><EditIcon/></IconButton>
           <Checkbox checked={task.finished} onChange={handleFinish}/>
         </Box>
-        <FilePupop open={openFile} handleClose={handleFileClose} tid={task.tid}/>
+        <FilePupop open={openFile} handleClose={handleFileClose} tid={task.tid} files={files} update={fetchFiles}/>
         <TaskEditPopup task={task} open={openPop} handleClose={handlePopClose} update={update} />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Divider />

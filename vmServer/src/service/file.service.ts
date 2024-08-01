@@ -19,6 +19,20 @@ export class FileService {
     }
   }
 
+  async existFileName(tid: number, name: string) {
+    try {
+      const res = await this.fileModel.findOneBy({tid: tid, name: name});
+      console.log('find ', tid, name, 'res:', res);
+      if (res === null) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async uploadFile(tid: number, name: string, filePath: string) {
     try {
       const data = { tid: tid, name: name, path: filePath, date: Date() };
@@ -47,11 +61,8 @@ export class FileService {
       if (!file) {
         throw new Error('File not found');
       }
-
       await this.removeFile(file.path);
-
       const res = await this.fileModel.delete({ fid: fid });
-
       return { success: true, path: file.path, res: res };
     } catch (err) {
       throw new Error(`Failed to delete file: ${err.message}`);
@@ -70,4 +81,16 @@ export class FileService {
       }
     }
   }
+  async downloadFile(fid: number) {
+    try {
+      const res = await this.fileModel.findOneBy({fid: fid});
+      const filePath = res.path;
+      const fileData  =await fs.readFile(filePath);
+      return {name: res.name, data: fileData};
+    } catch (err) {
+      throw err;
+    }
+  }
 }
+
+

@@ -11,6 +11,7 @@ export class FileController {
   async getFiles(@Query('tid') tid: number) {
     try {
       const res = await this.fileService.getFiles(tid);
+      console.log('get files:', res);
       return { name: 'getFiles', code: '200', status: 200, data: res };
     } catch (err) {
       return new httpError.RequestTimeoutError('Unknown Error!');
@@ -18,35 +19,40 @@ export class FileController {
   }
 
   @Post()
-  async uploadFile(
-    @Files() file: any,
-    @Fields() field: any,
-  ) {
-    // try {
-    const tid = field.tid;
-    const name = file[0].filename;
-      // 文件存储路径，假设根目录是项目的根目录
-      console.log('get a file:',file,'---with:',  tid, name, field);
+  async uploadFile(@Files() file: any, @Fields() field: any,) {
+    try {
+      const tid = field.tid;
+      let name = file[0].filename;
+      let already_exist = await this.fileService.existFileName(tid, name);
+      while (already_exist) {
+        name = 'new_' + name;
+        already_exist = await this.fileService.existFileName(tid, name);
+      }
       const filePath = path.join(__dirname, '../uploads', String(tid), name);
-      console.log('upload a file:', filePath);
-      // 上传文件的元数据存储到数据库中
-      await this.fileService.uploadFile(tid, name, filePath);
-
-      // 存储文件数据到文件系统
-      await this.fileService.storeFile(filePath, file[0].data);
-
-      return { name: 'uploadFile', code: '200', status: 200, data: {} };
-    // } catch (err) {
-    //   return new httpError.RequestTimeoutError('Unknown Error!');
-    // }
+      const res = this.fileService.uploadFile(tid, name, filePath);
+      const storeInfo = await this.fileService.storeFile(filePath, file[0].data);
+      await Promise.all([res, storeInfo]);
+      return { name: 'uploadFile', code: '200', status: 200, data: res };
+    } catch (err) {
+      return new httpError.RequestTimeoutError('Unknown Error!');
+    }
   }
 
   @Del()
   async deleteFile(@Query('fid') fid: number) {
     try {
       const res = await this.fileService.deleteFile(fid);
-
       return { name: 'deleteFile', code: '200', status: 200, data: res };
+    } catch (err) {
+      return new httpError.RequestTimeoutError('Unknown Error!');
+    }
+  }
+
+  @Get()
+  async downloadFile(@Query('fid') fid: number) {
+    try {
+      const res = await this.fileService.downloadFile(fid);
+      return {name: 'downloadFile', code: '200', status: 200, data: res};
     } catch (err) {
       return new httpError.RequestTimeoutError('Unknown Error!');
     }
