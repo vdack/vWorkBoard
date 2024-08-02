@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn} from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -18,19 +18,6 @@ export class User {
   @OneToMany(() => Notification, notification => notification.user,  { cascade: true, onDelete: 'CASCADE' })
   notifications: Notification[];
 };
-
-@Entity('token')
-export class Token {
-  @PrimaryColumn()
-  uid: number;
-
-  @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
-  lastAuthorized: Date;
-
-  @Column()
-  authToken: string;
-
-}
 
 @Entity('project')
 export class Project {
@@ -170,7 +157,7 @@ export class Notification {
   pid: number;
 
   @Column({default: false})
-  read: boolean;
+  have_read: boolean;
 
   @Column()
   action: string;

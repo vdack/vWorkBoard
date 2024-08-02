@@ -11,7 +11,7 @@ export class NotificationService {
   async getNotifications(uid: number) {
     try {
       const res = await this.notificationModel.find({where: {uid: uid}});
-      const counter = res.reduce((acc, noti) => {if (noti.read) {return acc;} return acc + 1;}, 0);
+      const counter = res.reduce((acc, noti) => {if (noti.have_read) {return acc;} return acc + 1;}, 0);
       return {counter: counter, notifications: res};
     } catch (err) {
       throw err;
@@ -31,7 +31,7 @@ export class NotificationService {
 
   async readNotification(nid: number) {
     try {
-      const res = await this.notificationModel.update({nid: nid}, {read: true});
+      const res = await this.notificationModel.update({nid: nid}, {have_read: true});
       return res;
     } catch (err) {
       throw err;
