@@ -5,9 +5,9 @@
 -- 请使用管理员权限, 将该数据库添加至mysql数据库中. 
 -- `sudo mysql < vwbdb_script.sql`
 
-CREATE USER 'vdack'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'vdack' IDENTIFIED BY 'password';
 CREATE DATABASE vwbdb;
-GRANT ALL PRIVILEGES ON vwbdb.* TO 'vdack'@'localhost';
+GRANT ALL PRIVILEGES ON vwbdb.* TO 'vdack';
 FLUSH PRIVILEGES;
 
 USE vwbdb;
