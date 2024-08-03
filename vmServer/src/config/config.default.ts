@@ -21,7 +21,7 @@ export default {
       default:{
         type: 'mysql',
         host: 'localhost',
-        port: 3306,
+        port: 3307,
         username: 'vdack',
         password: 'password',
         database: 'vwbdb',
