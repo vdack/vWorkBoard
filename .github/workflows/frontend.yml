@@ -1,1 +1,37 @@
+name: Frontend CI
 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd vwbFrontend
+          npm install
+
+      - name: Build
+        run: |
+          cd vwbFrontend
+          npm run build
+
+      - name: Run tests
+        run: |
+          cd vwbFrontend
+          npm test
